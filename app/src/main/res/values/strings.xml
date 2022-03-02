@@ -7,7 +7,7 @@
     <string name="donor">Donor</string>
     <string name="receiver">Receiver</string>
     <string name="upload">upload</string>
-   <string name="movenext">Get Started</string>
+    <string name="movenext">Get Started</string>
 
     <string name="hello_first_fragment">Choose a Role</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>

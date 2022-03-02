@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomescreenActivity"
-    android:background="#FFC0CB">
+    android:background="#FFFFF0">
 
 
 <TextView
@@ -26,13 +26,14 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     android:drawableRight="@drawable/ic_role"
-    android:drawablePadding="8dp"/>
+    android:drawablePadding="0dp"/>
 
 <Button
     android:id="@+id/button_first"
     android:layout_width="200dp"
     android:layout_height="70dp"
     android:text="@string/donor"
+    android:background="@drawable/input_outline"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +43,8 @@
     android:layout_width="200dp"
     android:layout_height="70dp"
     android:text="@string/receiver"
+
+    android:background="@drawable/input_outline"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomescreenActivity"
+    android:background="#FFFFF0">
+
+
+<TextView
+    android:id="@+id/textview_first"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/hello_first_fragment"
+    android:typeface="sans"
+    android:textStyle="bold"
+    android:textSize="34sp"
+    android:shadowColor="#00ccff"
+    android:shadowRadius="2"
+    android:shadowDx="1"
+    android:shadowDy="1"
+    app:layout_constraintBottom_toTopOf="@id/button_first"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:drawableRight="@drawable/ic_role"
+    android:drawablePadding="0dp"/>
+
+<Button
+    android:id="@+id/button_first"
+    android:layout_width="200dp"
+    android:layout_height="70dp"
+    android:text="@string/donor"
+    android:background="@drawable/input_outline"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/textview_first" />
+<Button
+    android:id="@+id/button_second"
+    android:layout_width="200dp"
+    android:layout_height="70dp"
+    android:text="@string/receiver"
+
+    android:background="@drawable/input_outline"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/button_first" />
+</androidx.constraintlayout.widget.ConstraintLayout>

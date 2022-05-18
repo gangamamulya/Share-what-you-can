@@ -4,16 +4,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.sharewhatyoucanproject.R
 import android.content.Intent
+
 import com.example.sharewhatyoucanproject.HomescreenActivity
 import com.example.sharewhatyoucanproject.MainActivity
-import com.example.sharewhatyoucanproject.LocationTrack
+import com.example.sharewhatyoucanproject.DonorActivity
+
 import android.widget.EditText
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.database.DatabaseReference
 import android.app.ProgressDialog
 import android.Manifest.permission
 import android.os.Build
-import com.example.sharewhatyoucanproject.DonorActivity
+
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.database.FirebaseDatabase
 import android.widget.Toast
@@ -38,16 +40,14 @@ import android.os.IBinder
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import com.example.sharewhatyoucanproject.DashboardActivity
+
 import com.google.firebase.storage.UploadTask
 import java.io.IOException
 import java.util.ArrayList
 
-class DonorActivity : AppCompatActivity() {
-    private var permissionsToRequest: ArrayList<*>? = null
-    private val permissionsRejected: ArrayList<*> = ArrayList<Any?>()
-    private val permissions: ArrayList<*> = ArrayList<Any?>()
-    var locationTrack: LocationTrack? = null
+class DonorActivity : AppCompatActivity()
+{
+
 
     // Folder path for Firebase Storage.
     var Storage_Path = "All_Image_Uploads/"
@@ -58,7 +58,7 @@ class DonorActivity : AppCompatActivity() {
     // Creating button.
     var ChooseButton: Button? = null
     var UploadButton: Button? = null
-    var LocationButton: Button? = null
+
 
     // Creating EditText.
     var ImageName: EditText? = null
@@ -80,18 +80,6 @@ class DonorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donor)
-        //code for location start
-        permissions.add(permission.ACCESS_FINE_LOCATION)
-        permissions.add(permission.ACCESS_COARSE_LOCATION)
-        permissionsToRequest = findUnAskedPermissions(permissions)
-        //get the permissions we have asked for before but are not granted..
-        //we will store this in a global list to access later.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (permissionsToRequest!!.size > 0) requestPermissions(
-                (permissionsToRequest!!.toTypedArray() as Array<String?>),
-                ALL_PERMISSIONS_RESULT
-            )
-        }
 
 
         // Assign FirebaseStorage instance to storageReference.
@@ -103,7 +91,7 @@ class DonorActivity : AppCompatActivity() {
         //Assign ID'S to button.
         ChooseButton = findViewById<View>(R.id.btnChoose) as Button
         UploadButton = findViewById<View>(R.id.btnUpload) as Button
-        LocationButton = findViewById<View>(R.id.btn) as Button
+
 
         // Assign ID's to EditText.
         ImageName = findViewById<View>(R.id.foodname) as EditText
@@ -114,21 +102,6 @@ class DonorActivity : AppCompatActivity() {
 
         // Assigning Id to ProgressDialog.
         progressDialog = ProgressDialog(this@DonorActivity)
-        LocationButton!!.setOnClickListener {
-            locationTrack = LocationTrack(this@DonorActivity)
-            if (locationTrack!!.canGetLocation()) {
-                val longitude = locationTrack!!.getLongitude()
-                val latitude = locationTrack!!.getLatitude()
-                Toast.makeText(
-                    applicationContext, """
-     Longitude:${java.lang.Double.toString(longitude)}
-     Latitude:${java.lang.Double.toString(latitude)}
-     """.trimIndent(), Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                locationTrack!!.showSettingsAlert()
-            }
-        }
 
         // Adding click listener to Choose image button.
         ChooseButton!!.setOnClickListener { // Creating intent.
@@ -150,77 +123,7 @@ class DonorActivity : AppCompatActivity() {
         }
     }
 
-    private fun findUnAskedPermissions(wanted: ArrayList<*>): ArrayList<*> {
-        val result: ArrayList<*> = ArrayList<Any?>()
-        for (perm in wanted) {
-            if (!hasPermission(perm as String)) {
-                result.add(perm)
-            }
-        }
-        return result
-    }
 
-    private fun hasPermission(permission: String): Boolean {
-        if (canMakeSmores()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
-            }
-        }
-        return true
-    }
-
-    private fun canMakeSmores(): Boolean {
-        return Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            ALL_PERMISSIONS_RESULT -> {
-                for (perms in permissionsToRequest!!) {
-                    if (!hasPermission(perms as String)) {
-                        permissionsRejected.add(perms)
-                    }
-                }
-                if (permissionsRejected.size > 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale((permissionsRejected[0] as String))) {
-                            showMessageOKCancel(
-                                "These permissions are mandatory for the application. Please allow access."
-                            ) { dialog, which ->
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    requestPermissions(
-                                        (permissionsRejected.toTypedArray() as Array<String?>),
-                                        ALL_PERMISSIONS_RESULT
-                                    )
-                                }
-                            }
-                            return
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showMessageOKCancel(message: String, okListener: DialogInterface.OnClickListener) {
-        AlertDialog.Builder(this@DonorActivity)
-            .setMessage(message)
-            .setPositiveButton("OK", okListener)
-            .setNegativeButton("Cancel", null)
-            .create()
-            .show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        locationTrack!!.stopListener()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -254,68 +157,7 @@ class DonorActivity : AppCompatActivity() {
     // Creating UploadImageFileToFirebaseStorage method to upload image on storage.
     fun UploadImageFileToFirebaseStorage() {
 
-        // Checking whether FilePathUri Is empty or not.
-        if (FilePathUri != null) {
-
-            // Setting progressDialog Title.
-            progressDialog!!.setTitle("Image is Uploading...")
-
-            // Showing progressDialog.
-            progressDialog!!.show()
-
-            // Creating second StorageReference.
-            val storageReference2nd = storageReference!!.child(
-                Storage_Path + System.currentTimeMillis() + "." + GetFileExtension(FilePathUri)
-            )
-
-            // Adding addOnSuccessListener to second StorageReference.
-            storageReference2nd.putFile(FilePathUri!!)
-                .addOnSuccessListener { taskSnapshot -> // Getting image name and description from EditText and store into string variable.
-                    val TempImageName = ImageName!!.text.toString().trim { it <= ' ' }
-                    val TempImageDesc = ImageDescription!!.text.toString().trim { it <= ' ' }
-                    // float TempLocation = LocationButton.getVa
-
-                    // Hiding the progressDialog after done uploading.
-                    progressDialog!!.dismiss()
-
-                    // Showing toast message after done uploading.
-                    Toast.makeText(
-                        applicationContext,
-                        "Image Uploaded Successfully ",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    val imageUploadInfo = ImageUploadInfo(
-                        TempImageName,
-                        TempImageDesc,
-                        taskSnapshot.uploadSessionUri.toString()
-                    )
-
-                    // Getting image upload ID.
-                    val ImageUploadId = databaseReference!!.push().key
-
-                    // Adding image upload id s child element into databaseReference.
-                    databaseReference!!.child(ImageUploadId!!).setValue(imageUploadInfo)
-                } // If something goes wrong .
-                .addOnFailureListener { exception -> // Hiding the progressDialog.
-                    progressDialog!!.dismiss()
-
-                    // Showing exception error message.
-                    Toast.makeText(this@DonorActivity, exception.message, Toast.LENGTH_LONG).show()
-                } // On progress change upload time.
-                .addOnProgressListener(object : OnProgressListener<UploadTask.TaskSnapshot?> {
-                    override fun onProgress(taskSnapshot: UploadTask.TaskSnapshot?) {
-
-                        // Setting progressDialog Title.
-                        progressDialog!!.setTitle("Image is Uploading...")
-                    }
-                })
-        } else {
-            Toast.makeText(
-                this@DonorActivity,
-                "Please Select Image or Add Image Name",
-                Toast.LENGTH_LONG
-            ).show()
-        }
+       //here uploading image to firebase part will be implemented
     }
 
     companion object {

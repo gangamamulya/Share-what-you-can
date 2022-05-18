@@ -6,7 +6,6 @@ import com.example.sharewhatyoucanproject.R
 import android.content.Intent
 import com.example.sharewhatyoucanproject.HomescreenActivity
 import com.example.sharewhatyoucanproject.MainActivity
-import com.example.sharewhatyoucanproject.LocationTrack
 import android.widget.EditText
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.database.DatabaseReference
@@ -33,7 +32,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import androidx.core.app.ActivityCompat
 import android.os.IBinder
-import com.example.sharewhatyoucanproject.DashboardActivity
+
 
 class ImageUploadInfo {
     var imageName: String? = null

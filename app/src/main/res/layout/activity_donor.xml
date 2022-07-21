@@ -1,131 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:paddingLeft="16dp"
-android:paddingRight="16dp"
-android:orientation="vertical"
-android:paddingTop="98dp"
+<!--suppress ALL -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
-android:background="#FFFFF0"
-    tools:context=".DonorActivity"
-    >
-
-
-<TextView
-    android:id="@+id/titleInput"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/white">
 
-    android:text="Hii, you can upload your donations here.."
-    android:typeface="sans"
-    android:textAlignment="center"
-    android:textStyle="bold"
-    android:textSize="24sp"
-    android:shadowColor="#00ccff"
-    android:shadowRadius="2"
-    android:shadowDx="1"
-    android:shadowDy="1"
-    app:layout_constraintBottom_toTopOf="@id/button_second"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/foodimg"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/upload"
+        tools:ignore="MissingClass" />
 
-    <Button
-        android:id="@+id/btnChoose"
-        android:text="Choose"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10dp"
-        android:drawableRight="@drawable/ic_fileupload"
-        android:drawablePadding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleInput"
-         />
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-    </TextView>
-
-
-
-<EditText
-    android:id="@+id/foodname"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:hint="Add your food name here"
-    android:textSize="16sp"
-    android:typeface="sans"
-    app:layout_constraintBottom_toTopOf="@+id/btnUpload"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.498"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.88" />
-<EditText
-    android:id="@+id/fooddesc"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:hint="Add your food description here"
-    android:textSize="16sp"
-    android:typeface="sans"
-    app:layout_constraintBottom_toTopOf="@+id/button_second"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.498"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.88" />
-    <Button
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn"
-        android:layout_centerInParent="true"
-        android:text="GET LOCATION" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:text="Click above to upload photo"
+        android:textColor="#696969"/>
 
-    <Button
-        android:id="@+id/btnUpload"
 
+    <com.google.android.material.textfield.TextInputLayout
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="#696969"
+        app:hintTextColor="#696969"
+        app:boxStrokeColor="#FA2E2E"
+        android:hint="Enter Food Name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/titleet"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:inputType="textEmailAddress"
+            android:textColor="#000000" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_marginTop="12dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="#696969"
+        app:hintTextColor="#696969"
+
+        app:boxStrokeColor="#FA2E2E"
+        android:hint="Enter Description">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
+            android:textColor="#000000"
+            android:id="@+id/descet"
+            android:gravity="start"
+            android:layout_height="150dp"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="#696969"
+        app:hintTextColor="#696969"
+        app:boxStrokeColor="#FA2E2E"
+        android:hint="Cooked Hours Before">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/hourset"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:inputType="number"
+            android:textColor="#000000" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_marginTop="12dp"
+        android:id="@+id/spinner"
+        android:layout_height="50dp"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Upload"
-        android:background="@drawable/input_outline"
-        android:layout_width="160dp"
-        android:layout_height="60dp"
-        android:drawableRight="@drawable/ic_fileupload"
-        android:drawablePadding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@id/titleInput"
-
-        />
-
-    <ImageView
-        android:id = "@+id/imageView"
-        android:layout_width = "30dp"
-        android:layout_height = "30dp" />
-    <Button
-        android:id="@+id/navigatetodashboard"
-        android:text="go see how your upload looks like"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10dp"
-
-        android:drawablePadding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleInput"
-        />
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+        android:layout_marginTop="12dp"
+        android:layout_margin="12dp"
+        android:textSize="16dp"
+        android:id="@+id/uploadbtn"
+        android:textColor="@color/white"
+        android:background="@drawable/curvebtn"/>
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:tools = "http://schemas.android.com/tools"
+    android:layout_width = "match_parent"
+    android:layout_height = "match_parent"
+    android:layout_margin = "16dp"
+    android:orientation = "vertical"
+    tools:context = ".MainActivity"
+    >
+    <TextView
+        android:id="@+id/backgroundtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="90dp"
+        android:text="Currently there is a lot of food wastage in the world be it by the restaurant or by the individuals. And people tend to throw away the excess or left over food items.
+The main aim of this application is to not waste food and reach food for the needy"
+        android:typeface="serif"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:shadowColor="#00ccff"
+        android:shadowRadius="2"
+        android:shadowDx="1"
+        android:shadowDy="1"
+
+        />
+
+
+    <Button
+        android:id = "@+id/nextButton"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:layout_gravity = "center"
+        android:layout_marginTop = "16dp"
+        android:text = "Get started" />
+</LinearLayout>

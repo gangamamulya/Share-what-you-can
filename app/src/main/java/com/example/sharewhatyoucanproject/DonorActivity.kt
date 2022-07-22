@@ -1,233 +1,341 @@
 package com.example.sharewhatyoucanproject
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import com.example.sharewhatyoucanproject.R
-import android.content.Intent
-
-import com.example.sharewhatyoucanproject.HomescreenActivity
-import com.example.sharewhatyoucanproject.MainActivity
-import com.example.sharewhatyoucanproject.DonorActivity
-
-import android.widget.EditText
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.database.DatabaseReference
+import android.Manifest
 import android.app.ProgressDialog
-import android.Manifest.permission
-import android.os.Build
-
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.database.FirebaseDatabase
-import android.widget.Toast
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.annotation.TargetApi
-import android.content.DialogInterface
-import android.app.Activity
-import android.app.AlertDialog
-import android.graphics.Bitmap
-import android.provider.MediaStore
-import android.content.ContentResolver
-import android.webkit.MimeTypeMap
-import com.google.android.gms.tasks.OnSuccessListener
-import com.example.sharewhatyoucanproject.ImageUploadInfo
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.firebase.storage.OnProgressListener
-import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
-import androidx.core.app.ActivityCompat
-import android.os.IBinder
+import android.os.Bundle
+import android.os.Looper
+import android.provider.MediaStore
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import java.io.IOException
-import java.util.ArrayList
+import java.util.*
+import kotlin.collections.HashMap
+
 
 class DonorActivity : AppCompatActivity() {
 
+    lateinit var foodimg: ImageView
+    var filepath: Uri? = null
+    lateinit var uploadbtn: Button
+    lateinit var firebaseAuth: FirebaseAuth
+    lateinit var db: FirebaseFirestore
+    lateinit var storage: FirebaseStorage
+    lateinit var storageReference: StorageReference
+    lateinit var uploadTask: UploadTask
+    lateinit var titleet: TextView
+    lateinit var descet: TextView
+    private lateinit var hourset: EditText
+    lateinit var pd: ProgressDialog
+    lateinit var locationRequest: com.google.android.gms.location.LocationRequest
 
-    // Folder path for Firebase Storage.
-    var Storage_Path = "All_Image_Uploads/"
-
-    // Root Database Name for Firebase Database.
-    var Database_Path = "All_Image_Uploads_Database"
-
-    // Creating button.
-    var ChooseButton: Button? = null
-    var UploadButton: Button? = null
+    var longitute: Double = 0.0
+    var latitude: Double = 0.0
 
 
-    // Creating EditText.
-    var ImageName: EditText? = null
-    var ImageDescription: EditText? = null
+    private lateinit var spin: Spinner
 
-    // Creating ImageView.
-    var SelectImage: ImageView? = null
+    var typestr: String = "Cooked Food"
+    var types = arrayOf(
+        "Cooked Food",
+        "Ingredients",
+        "Packaged food",
+        "Groceries"
+    )
 
-    // Creating URI.
-    var FilePathUri: Uri? = null
+    lateinit var arrayAdapter: ArrayAdapter<String>
 
-    // Creating StorageReference and DatabaseReference object.
-    var storageReference: StorageReference? = null
-    var databaseReference: DatabaseReference? = null
-
-    // Image request code for onActivityResult() .
-    var Image_Request_Code = 7
-    var progressDialog: ProgressDialog? = null
+    val PERMISSION_ALL = 1
+    val PERMISSIONS = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_donor)
+        setContentView(R.layout.activity_upload)
+        supportActionBar?.hide()
+        pd = ProgressDialog(this)
+        pd.setTitle("Please Wait")
+        pd.setCancelable(false)
+        locationRequest = com.google.android.gms.location.LocationRequest.create()
 
+        hourset = findViewById(R.id.hourset)
 
-        // Assign FirebaseStorage instance to storageReference.
-        storageReference = FirebaseStorage.getInstance().reference
-
-        // Assign FirebaseDatabase instance with root database name.
-        databaseReference = FirebaseDatabase.getInstance().getReference(Database_Path)
-
-        //Assign ID'S to button.
-        ChooseButton = findViewById<View>(R.id.btnChoose) as Button
-        UploadButton = findViewById<View>(R.id.btnUpload) as Button
-
-
-        // Assign ID's to EditText.
-        ImageName = findViewById<View>(R.id.foodname) as EditText
-        ImageDescription = findViewById<View>(R.id.fooddesc) as EditText
-
-        // Assign ID'S to image view.
-        SelectImage = findViewById<View>(R.id.imageView) as ImageView
-
-        // Assigning Id to ProgressDialog.
-        progressDialog = ProgressDialog(this@DonorActivity)
-
-        // Adding click listener to Choose image button.
-        ChooseButton!!.setOnClickListener { // Creating intent.
+        storage = FirebaseStorage.getInstance()
+        storageReference = storage.reference
+        spin = findViewById(R.id.spinner)
+        uploadbtn = findViewById(R.id.uploadbtn)
+        titleet = findViewById(R.id.titleet)
+        descet = findViewById(R.id.descet)
+        firebaseAuth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+        foodimg = findViewById(R.id.foodimg)
+        foodimg.setOnClickListener(View.OnClickListener {
             val intent = Intent()
-
-            // Setting intent type as image to select image from phone storage.
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(
-                Intent.createChooser(intent, "Please Select Image"),
-                Image_Request_Code
-            )
-        }
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 0)
+        })
 
 
-        // Adding click listener to Upload image button.
-        UploadButton!!.setOnClickListener { // Calling method to upload selected image on Firebase storage.
-            UploadImageFileToFirebaseStorage()
-        }
-    }
+        arrayAdapter = ArrayAdapter<String>(
+            applicationContext,
+            android.R.layout.simple_spinner_dropdown_item,
+            types
+        )
+        spin?.setAdapter(arrayAdapter)
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        val imageselection =
-            (requestCode == Image_Request_Code && resultCode == RESULT_OK && data != null && data.data != null)
-
-        if (imageselection) {
-            if (data != null) {
-                FilePathUri = data.data
+        spin.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                typestr = types[position]
+                Toast.makeText(applicationContext, "" + typestr, Toast.LENGTH_SHORT)
+                    .show()
             }
-            try {
 
-                // Getting selected image into Bitmap.
-                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, FilePathUri)
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
 
-                // Setting up bitmap selected image into ImageView.
-                SelectImage!!.setImageBitmap(bitmap)
+        uploadbtn.setOnClickListener(View.OnClickListener {
+            if (titleet.getText().toString().isEmpty() || descet.getText().toString()
+                    .isEmpty() || hourset.text.toString().isEmpty()
+            ) {
+                Toast.makeText(applicationContext, "Please Fill All Fields", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
 
-                // After selecting image change choose button above text.
-                ChooseButton!!.text = "Image Selected"
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    // Creating Method to get the selected image file Extension from File Path URI.
-    fun GetFileExtension(uri: Uri?): String? {
-        val contentResolver = contentResolver
-        val mimeTypeMap = MimeTypeMap.getSingleton()
-
-        // Returning the file Extension.
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
-    }
-
-    // Creating UploadImageFileToFirebaseStorage method to upload image on storage.
-    fun UploadImageFileToFirebaseStorage() {
-
-        // TODO: Implement uploading of the image to the backend, <jira ticket: https://oregonstate-innovationlab.atlassian.net/browse/LAB-94
-        // Checking whether FilePathUri Is empty or not.
-        if (FilePathUri != null) {
-
-            // Setting progressDialog Title.
-            progressDialog!!.setTitle("Image is Uploading...")
-
-            // Showing progressDialog.
-            progressDialog!!.show()
-
-            // Creating second StorageReference.
-            val storageReference2nd = storageReference!!.child(
-                Storage_Path + System.currentTimeMillis() + "." + GetFileExtension(FilePathUri)
-            )
-
-            // Adding addOnSuccessListener to second StorageReference.
-            storageReference2nd.putFile(FilePathUri!!)
-                .addOnSuccessListener { taskSnapshot -> // Getting image name and description from EditText and store into string variable.
-                    val TempImageName = ImageName!!.text.toString().trim { it <= ' ' }
-                    val TempImageDesc = ImageDescription!!.text.toString().trim { it <= ' ' }
-                    // float TempLocation = LocationButton.getVa
-
-                    // Hiding the progressDialog after done uploading.
-                    progressDialog!!.dismiss()
-
-                    // Showing toast message after done uploading.
+                if (!hasPermissions(
+                        applicationContext,
+                        *PERMISSIONS
+                    )
+                ) {
                     Toast.makeText(
                         applicationContext,
-                        "Image Uploaded Successfully ",
-                        Toast.LENGTH_LONG
+                        "Please Allow Location To Post",
+                        Toast.LENGTH_SHORT
                     ).show()
-                    val imageUploadInfo = ImageUploadInfo(
-                        TempImageName,
-                        TempImageDesc,
-                        taskSnapshot.uploadSessionUri.toString()
+                    ActivityCompat.requestPermissions(
+                        this@DonorActivity,
+                        PERMISSIONS,
+                        PERMISSION_ALL
                     )
+                } else {
 
-                    // Getting image upload ID.
-                    val ImageUploadId = databaseReference!!.push().key
+                    if (isGPSEnabled(applicationContext)) {
 
-                    // Adding image upload id s child element into databaseReference.
-                    databaseReference!!.child(ImageUploadId!!).setValue(imageUploadInfo)
-                } // If something goes wrong .
-                .addOnFailureListener { exception -> // Hiding the progressDialog.
-                    progressDialog!!.dismiss()
+                        if (filepath != null) {
+                            pd.show()
+                            if (typestr.equals("Cooked Food") && Integer.parseInt(hourset.text.toString()) > 48) {
 
-                    // Showing exception error message.
-                    Toast.makeText(this@DonorActivity, exception.message, Toast.LENGTH_LONG).show()
-                } // On progress change upload time.
-                .addOnProgressListener(object : OnProgressListener<UploadTask.TaskSnapshot?> {
-                    override fun onProgress(snapshot: UploadTask.TaskSnapshot) {
+                                pd.dismiss()
+                                Toast.makeText(
+                                    applicationContext,
+                                    "You Cannot Upload Food",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                        // Setting progressDialog Title.
-                        progressDialog!!.setTitle("Image is Uploading...")
+                            } else if (typestr.equals("Groceries") && Integer.parseInt(hourset.text.toString()) > 1460) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "You Cannot Upload Food",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                pd.dismiss()
+
+                            } else {
+                                uploadImage()
+                            }
+
+
+                        } else {
+                            Toast.makeText(applicationContext, "Choose a image", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                    } else {
+
+                        Toast.makeText(applicationContext, "Open Your GPS", Toast.LENGTH_SHORT)
+                            .show()
+
                     }
-                })
-        } else {
-            Toast.makeText(
-                this@DonorActivity,
-                "Please Select Image or Add Image Name",
-                Toast.LENGTH_LONG
-            ).show()
+
+                }
+
+            }
+        })
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+
+                    filepath = data.data
+                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, data.data)
+                    foodimg.setImageBitmap(bitmap)
+
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(applicationContext, "Canceled", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    companion object {
-        private const val ALL_PERMISSIONS_RESULT = 101
+    private fun uploadImage() {
+
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            ActivityCompat.requestPermissions(this@DonorActivity, PERMISSIONS, PERMISSION_ALL)
+
+            return
+        }
+
+        LocationServices.getFusedLocationProviderClient(applicationContext)
+            .requestLocationUpdates(locationRequest, object : LocationCallback() {
+                override fun onLocationResult(locationresult: LocationResult) {
+                    super.onLocationResult(locationresult)
+
+                    if (locationresult.locations != null) {
+                        if (locationresult.getLocations().size > 0) {
+
+                            val index: Int = locationresult.getLocations().size - 1
+                            latitude = locationresult.getLocations().get(index).getLatitude()
+                            longitute = locationresult.getLocations().get(index).getLongitude()
+
+                            val point = GeoPoint(latitude, longitute)
+
+                            if (filepath != null) {
+                                val ref = storageReference.child("images/" + UUID.randomUUID())
+                                uploadTask = ref.putFile(filepath!!)
+                                uploadTask.continueWithTask { task ->
+                                    if (!task.isSuccessful) {
+                                        pd.show()
+                                        throw task.exception!!
+                                    }
+                                    ref.downloadUrl
+                                }.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        val downloadUri = task.result
+                                        val postmap: MutableMap<String, Any?> = HashMap()
+                                        postmap["imageUrl"] = downloadUri.toString()
+                                        // postmap["uid"] = firebaseAuth.currentUser!!.uid
+                                        postmap["date"] = FieldValue.serverTimestamp()
+                                        postmap["title"] = titleet.text.toString()
+                                        postmap["description"] = descet.text.toString()
+                                        //postmap["name"] = firebaseAuth.currentUser!!.displayName
+                                        postmap["status"] = 0
+                                        postmap["type"] = typestr
+                                        postmap["location"] = point
+                                        db.collection("posts")
+                                            .add(postmap)
+                                            .addOnCompleteListener { task ->
+                                                pd.show()
+                                                if (task.isSuccessful) {
+                                                    Toast.makeText(
+                                                        this@DonorActivity,
+                                                        "Post Added",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    finish()
+                                                } else {
+                                                    pd.dismiss()
+                                                    Toast.makeText(
+                                                        this@DonorActivity,
+                                                        "Failed " + task.exception,
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+
+                                    } else {
+                                        pd.dismiss()
+                                        Toast.makeText(
+                                            this@DonorActivity,
+                                            "Failed " + task.exception,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Please Select a Image First",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                        } else {
+                            Toast.makeText(
+                                applicationContext,
+                                "Some Technical Error. Please Retry",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+
+                }
+
+            }, Looper.getMainLooper()!!)
+
+
+    }
+
+
+    private fun isGPSEnabled(context: Context): Boolean {
+        var locationManager: LocationManager? = null
+        var isenable = false
+        if (locationManager == null) {
+            locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+        }
+        isenable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        return isenable
+    }
+
+
+    fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
+        if (context != null && permissions != null) {
+            for (permission in permissions) {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        permission!!
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return false
+                }
+            }
+        }
+        return true
     }
 }

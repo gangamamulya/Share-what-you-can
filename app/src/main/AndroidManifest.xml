@@ -15,10 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShareWhatYouCanProject">
-        <activity android:name=".HomescreenActivity" />
+        <activity android:name=".DashboardActivity" />
+        <activity android:name=".DonorActivity" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".HomescreenActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ShareWhatYouCanProject.NoActionBar">

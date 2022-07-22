@@ -69,7 +69,7 @@ class DonorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upload)
-
+        supportActionBar?.hide()
         pd = ProgressDialog(this)
         pd.setTitle("Please Wait")
         pd.setCancelable(false)

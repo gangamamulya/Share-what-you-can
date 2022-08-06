@@ -15,6 +15,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShareWhatYouCanProject">
+        <activity
+            android:name=".DrawerActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".DrawerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SelectUserActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
         <activity android:name=".DashboardActivity" />
         <activity android:name=".DonorActivity" />
 

@@ -13,7 +13,7 @@ class HomescreenActivity : AppCompatActivity() {
         //donor action
         val button = findViewById<View>(R.id.donerimg) as ImageView
         button.setOnClickListener { // Do something in response to button click
-            startActivity(Intent(this@HomescreenActivity, DonorActivity::class.java))
+            startActivity(Intent(this@HomescreenActivity, LoginActivity::class.java))
         }
 
         //receiver action

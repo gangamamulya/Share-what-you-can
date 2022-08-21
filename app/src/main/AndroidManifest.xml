@@ -14,23 +14,24 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ShareWhatYouCanProject">
+        android:theme="@style/Theme.ShareWhatYouCanProject"
+        android:usesCleartextTraffic="true">
+       
+        <activity
+            android:name=".SelectUserActivity"
+            android:exported="false" />
         <activity
             android:name=".DrawerActivity2"
             android:exported="false" />
         <activity
             android:name=".DrawerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SelectUserActivity"
-            android:exported="false" />
-
+            android:exported="false"
+            android:theme="@style/Theme.ShareWhatYouCanProject.NoActionBar"/>
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity android:name=".DashboardActivity" />
         <activity android:name=".DonorActivity" />
-
         <activity
             android:name=".HomescreenActivity"
             android:exported="true"

@@ -1,13 +1,14 @@
 package com.example.sharewhatyoucanproject
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.content.Intent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+
 
 class SelectUserActivity : AppCompatActivity() {
     lateinit var pantry: LinearLayout
@@ -32,23 +33,24 @@ class SelectUserActivity : AppCompatActivity() {
         })
 
         individual.setOnClickListener(View.OnClickListener {
-            sendtodb("indivtypeidual")
+            sendtodb("individual")
 
         })
 
     }
 
-    fun sendtodb(type: String){
+    fun sendtodb(type: String) {
         db.collection("users")
             .document(auth.currentUser!!.uid)
-            .update("type",type)
-            .addOnCompleteListener { task->
-                if (task.isSuccessful){
+            .update("type", type)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     val i = Intent(this, DrawerActivity::class.java)
                     startActivity(i)
                     finish()
-                }else{
-                    Toast.makeText(applicationContext, "Failed to update", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(applicationContext, "Failed to update", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
     }

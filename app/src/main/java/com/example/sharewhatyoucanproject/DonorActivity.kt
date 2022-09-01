@@ -11,7 +11,14 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationCallback
@@ -24,7 +31,7 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import java.util.*
+import java.util.UUID
 import kotlin.collections.HashMap
 
 class DonorActivity : AppCompatActivity() {
@@ -116,7 +123,6 @@ class DonorActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Please Fill All Fields", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-
                     if (!hasPermissions(
                             applicationContext,
                             *permissions
@@ -137,7 +143,6 @@ class DonorActivity : AppCompatActivity() {
                             if (filepath != null) {
                                 pd.show()
                                 if (typestr.equals("Cooked Food") && Integer.parseInt(hourset.text.toString()) > 48) {
-
                                     pd.dismiss()
                                     Toast.makeText(
                                         applicationContext,
@@ -159,7 +164,6 @@ class DonorActivity : AppCompatActivity() {
                                     .show()
                             }
                         } else {
-
                             Toast.makeText(applicationContext, "Open Your GPS", Toast.LENGTH_SHORT)
                                 .show()
                         }
@@ -174,7 +178,6 @@ class DonorActivity : AppCompatActivity() {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
-
                     filepath = data.data
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, data.data)
                     foodimg.setImageBitmap(bitmap)
@@ -194,25 +197,20 @@ class DonorActivity : AppCompatActivity() {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
         ) {
-
             ActivityCompat.requestPermissions(this@DonorActivity, permissions, permission_all)
-
             return
         }
-
         LocationServices.getFusedLocationProviderClient(applicationContext)
             .requestLocationUpdates(
                 locationRequest,
                 object : LocationCallback() {
                     override fun onLocationResult(locationresult: LocationResult) {
                         super.onLocationResult(locationresult)
-
                         if (locationresult.locations != null) {
                             if (locationresult.locations.size > 0) {
                                 val index: Int = locationresult.locations.size - 1
                                 latitude = locationresult.locations.get(index).latitude
                                 longitute = locationresult.locations.get(index).longitude
-
                                 val point = GeoPoint(latitude, longitute)
                                 val fpvar = filepath
                                 if (fpvar != null) {

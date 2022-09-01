@@ -81,7 +81,6 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val size = task.result.size()
-
                     if (size == 0) {
                         createuser()
                     } else {
@@ -99,7 +98,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun createuser() {
-
         auth.createUserWithEmailAndPassword(
             email,
             "Test@123"
@@ -118,14 +116,12 @@ class LoginActivity : AppCompatActivity() {
                         usermap["uuid"] = it.result.user!!.uid
                     }
                     usermap["deviceId"] = deviceid
-
                     it.result?.user?.uid?.let { it1 ->
                         db.collection("users")
                             .document(it1)
                             .set(usermap)
                             .addOnCompleteListener { task2 ->
                                 if (task2.isSuccessful) {
-
                                     val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
                                     val profileUpdates: UserProfileChangeRequest =
                                         UserProfileChangeRequest.Builder()
@@ -186,9 +182,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun loginuser() {
-        auth.signInWithEmailAndPassword(
-            email, "Test@123"
-        ).addOnCompleteListener(
+        auth.signInWithEmailAndPassword(email, "Test@123").addOnCompleteListener(
             OnCompleteListener { task ->
                 if (task.isSuccessful) {
                     pd.dismiss()

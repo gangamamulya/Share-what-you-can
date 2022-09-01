@@ -8,7 +8,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
-import android.view.Window
 import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -27,21 +26,15 @@ class DrawerActivity : AppCompatActivity() {
     lateinit var pd: ProgressDialog
     lateinit var usernameh: TextView
 
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         pd = ProgressDialog(this)
         pd.setTitle("Logging Out")
         pd.setCancelable(false)
-
-
-
         binding = ActivityDrawerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        // requestWindowFeature(Window.FEATURE_NO_TITLE);
         setSupportActionBar(binding.appBarDrawer.toolbar)
-
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_drawer)
@@ -53,8 +46,6 @@ class DrawerActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         val navigationView1 = findViewById<NavigationView>(R.id.nav_view)
-
-
         val headerview = navigationView1.getHeaderView(0)
         usernameh = headerview.findViewById(R.id.donertv)
         usernameh.setText("" + FirebaseAuth.getInstance().currentUser?.displayName)
@@ -67,7 +58,7 @@ class DrawerActivity : AppCompatActivity() {
         }
 
         FirebaseMessaging.getInstance()
-            .subscribeToTopic("" + FirebaseAuth.getInstance().currentUser!!.uid)
+            .subscribeToTopic("" + FirebaseAuth.getInstance().currentUser?.uid)
 
 
         navigationView1.menu.getItem(1).setOnMenuItemClickListener {

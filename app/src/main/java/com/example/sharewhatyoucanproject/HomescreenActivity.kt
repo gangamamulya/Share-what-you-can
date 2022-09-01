@@ -14,16 +14,15 @@ class HomescreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_homescreen)
-
         firebaseAuth = FirebaseAuth.getInstance()
         donerimg = findViewById(R.id.donerimg)
         receiverimg = findViewById(R.id.receiverimg)
-        donerimg!!.setOnClickListener(View.OnClickListener {
+        donerimg?.setOnClickListener(View.OnClickListener {
             val i = Intent(this@HomescreenActivity, LoginActivity::class.java)
             i.putExtra("type", 1)
             startActivity(i)
         })
-        receiverimg!!.setOnClickListener(View.OnClickListener {
+        receiverimg?.setOnClickListener(View.OnClickListener {
             val i = Intent(this@HomescreenActivity, LoginActivity::class.java)
             i.putExtra("type", 2)
             startActivity(i)
@@ -32,7 +31,7 @@ class HomescreenActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (firebaseAuth!!.currentUser != null) {
+        if (firebaseAuth?.currentUser != null) {
             val sh = getSharedPreferences("MySharedPref", MODE_PRIVATE)
             val value = sh.getInt("selector", 0)
             if (value == 1) {

@@ -19,13 +19,10 @@ class SelectUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_user)
-
-
         pantry = findViewById(R.id.pantry)
-        auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         individual = findViewById(R.id.individual)
-
         pantry.setOnClickListener(View.OnClickListener {
 
             sendtodb("pantry")
@@ -40,18 +37,20 @@ class SelectUserActivity : AppCompatActivity() {
     }
 
     fun sendtodb(type: String) {
-        db.collection("users")
-            .document(auth.currentUser!!.uid)
-            .update("type", type)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val i = Intent(this, DrawerActivity::class.java)
-                    startActivity(i)
-                    finish()
-                } else {
-                    Toast.makeText(applicationContext, "Failed to update", Toast.LENGTH_SHORT)
-                        .show()
+        auth?.currentUser?.uid?.let {
+            db.collection("users")
+                .document(it)
+                .update("type", type)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val i = Intent(this, DrawerActivity::class.java)
+                        startActivity(i)
+                        finish()
+                    } else {
+                        Toast.makeText(applicationContext, "Failed to update", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
-            }
+        }
     }
 }

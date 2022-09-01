@@ -13,7 +13,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.example.sharewhatyoucanproject.DonorActivity
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
@@ -26,8 +25,6 @@ class HomeFragment : Fragment() {
     var nameofuser: TextView? = null
     lateinit var checklocation: Button
     var latitude: Double = 44.5581222
-
-    // -123.2734361
     var longitute: Double = -123.2734361
     var mytest: LatLng? = null
     var test: Long = 0L
@@ -41,9 +38,8 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         uploadlayout = view.findViewById(R.id.uploadlayout)
         val nameofuser = view.findViewById<TextView>(R.id.nameofuser)
-        nameofuser.text = "" + FirebaseAuth.getInstance().currentUser!!.displayName
+        nameofuser.text = "" + FirebaseAuth.getInstance().currentUser?.displayName
         checklocation = view.findViewById(R.id.checklocation)
-
         convertbtn = view.findViewById(R.id.convertbtn)
         locationRequest = com.google.android.gms.location.LocationRequest.create()
         checklocation.setOnClickListener(View.OnClickListener {
@@ -101,7 +97,7 @@ class HomeFragment : Fragment() {
 
                         }
 
-                    }, Looper.getMainLooper()!!)
+                    }, Looper.getMainLooper())
             }
 
 
@@ -111,20 +107,13 @@ class HomeFragment : Fragment() {
         convertbtn.setOnClickListener(View.OnClickListener {
 
 
-//            val latitude1: Double = 44.5581222
-//            val longitude1: Double = -123.2734361
+            val point = GeoPoint(latitude, longitute)
 
-            val point: GeoPoint = GeoPoint(latitude, longitute)
-
-            Toast.makeText(context, "Converted Sucessful: " + point, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Converted Sucesgansful: " + point, Toast.LENGTH_SHORT).show()
         })
 
-        uploadlayout!!.setOnClickListener(View.OnClickListener {
-            // val mynew = LatLng(45.0, 123.0)
+        uploadlayout?.setOnClickListener(View.OnClickListener {
 
-
-            // mytest.latitude = latitude;
-//            val location = LatLng(latitude, longitude)
             val i = Intent(activity, DonorActivity::class.java)
             startActivity(i)
         })

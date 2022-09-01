@@ -43,13 +43,9 @@ class DonorActivity : AppCompatActivity() {
     private lateinit var hourset: EditText
     lateinit var pd: ProgressDialog
     lateinit var locationRequest: com.google.android.gms.location.LocationRequest
-
     var longitute: Double = 0.0
     var latitude: Double = 0.0
-
-
     private lateinit var spin: Spinner
-
     var typestr: String = "Cooked Food"
     var types = arrayOf(
         "Cooked Food",
@@ -59,9 +55,8 @@ class DonorActivity : AppCompatActivity() {
     )
 
     lateinit var arrayAdapter: ArrayAdapter<String>
-
-    val PERMISSION_ALL = 1
-    val PERMISSIONS = arrayOf(
+    val permission_all = 1
+    val permissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
@@ -74,9 +69,8 @@ class DonorActivity : AppCompatActivity() {
         pd.setTitle("Please Wait")
         pd.setCancelable(false)
         locationRequest = com.google.android.gms.location.LocationRequest.create()
-
+        supportActionBar?.hide()
         hourset = findViewById(R.id.hourset)
-
         storage = FirebaseStorage.getInstance()
         storageReference = storage.reference
         spin = findViewById(R.id.spinner)
@@ -99,10 +93,7 @@ class DonorActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             types
         )
-        spin?.setAdapter(arrayAdapter)
-
-
-
+        spin.setAdapter(arrayAdapter)
         spin.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -128,7 +119,7 @@ class DonorActivity : AppCompatActivity() {
 
                 if (!hasPermissions(
                         applicationContext,
-                        *PERMISSIONS
+                        *permissions
                     )
                 ) {
                     Toast.makeText(
@@ -138,13 +129,11 @@ class DonorActivity : AppCompatActivity() {
                     ).show()
                     ActivityCompat.requestPermissions(
                         this@DonorActivity,
-                        PERMISSIONS,
-                        PERMISSION_ALL
+                        permissions,
+                        permission_all
                     )
                 } else {
-
                     if (isGPSEnabled(applicationContext)) {
-
                         if (filepath != null) {
                             pd.show()
                             if (typestr.equals("Cooked Food") && Integer.parseInt(hourset.text.toString()) > 48) {
@@ -205,8 +194,6 @@ class DonorActivity : AppCompatActivity() {
     }
 
     private fun uploadImage() {
-
-
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -216,7 +203,7 @@ class DonorActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
 
-            ActivityCompat.requestPermissions(this@DonorActivity, PERMISSIONS, PERMISSION_ALL)
+            ActivityCompat.requestPermissions(this@DonorActivity, permissions, permission_all)
 
             return
         }
@@ -228,20 +215,22 @@ class DonorActivity : AppCompatActivity() {
 
                     if (locationresult.locations != null) {
                         if (locationresult.getLocations().size > 0) {
-
                             val index: Int = locationresult.getLocations().size - 1
                             latitude = locationresult.getLocations().get(index).getLatitude()
                             longitute = locationresult.getLocations().get(index).getLongitude()
 
                             val point = GeoPoint(latitude, longitute)
-
-                            if (filepath != null) {
+                            val fpvar = filepath
+                            if (fpvar != null) {
                                 val ref = storageReference.child("images/" + UUID.randomUUID())
-                                uploadTask = ref.putFile(filepath!!)
+                                uploadTask = ref.putFile(fpvar)
                                 uploadTask.continueWithTask { task ->
                                     if (!task.isSuccessful) {
                                         pd.show()
-                                        throw task.exception!!
+                                        val excep = task.exception
+                                        if (excep != null) {
+                                            throw excep
+                                        }
                                     }
                                     ref.downloadUrl
                                 }.addOnCompleteListener { task ->
@@ -249,11 +238,9 @@ class DonorActivity : AppCompatActivity() {
                                         val downloadUri = task.result
                                         val postmap: MutableMap<String, Any?> = HashMap()
                                         postmap["imageUrl"] = downloadUri.toString()
-                                        // postmap["uid"] = firebaseAuth.currentUser!!.uid
                                         postmap["date"] = FieldValue.serverTimestamp()
                                         postmap["title"] = titleet.text.toString()
                                         postmap["description"] = descet.text.toString()
-                                        //postmap["name"] = firebaseAuth.currentUser!!.displayName
                                         postmap["status"] = 0
                                         postmap["type"] = typestr
                                         postmap["location"] = point
@@ -306,8 +293,7 @@ class DonorActivity : AppCompatActivity() {
 
 
                 }
-
-            }, Looper.getMainLooper()!!)
+            }, Looper.getMainLooper())
 
 
     }
@@ -325,12 +311,14 @@ class DonorActivity : AppCompatActivity() {
 
 
     fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
-        if (context != null && permissions != null) {
+        if (context != null) {
             for (permission in permissions) {
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        permission!!
-                    ) != PackageManager.PERMISSION_GRANTED
+                if (permission?.let {
+                        ActivityCompat.checkSelfPermission(
+                            context,
+                            it
+                        )
+                    } != PackageManager.PERMISSION_GRANTED
                 ) {
                     return false
                 }

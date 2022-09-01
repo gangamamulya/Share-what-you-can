@@ -17,7 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
     lateinit var mytv: TextView
-
     lateinit var submitdevice: Button
     lateinit var email: String
     lateinit var auth: FirebaseAuth
@@ -32,19 +31,14 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        // supportActionBar?.hide()
-
-
         sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
         myEdit = sharedPreferences.edit()
         type = getIntent().getIntExtra("type", 0)
         pd = ProgressDialog(this)
         pd.setTitle("Please Wait")
         mytv = findViewById(R.id.mytv)
-
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
-
 
         if (type == 1) {
             mytv.setText("Doner")
@@ -63,15 +57,10 @@ class LoginActivity : AppCompatActivity() {
         namearray.add("Henry")
         namearray.add("Benjamin")
 
-
         submitdevice = findViewById(R.id.submitdevice)
-
         submitdevice.setOnClickListener(View.OnClickListener {
             deviceid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
             email = "s" + deviceid + "@gmail.com"
-
-
-
             pd.show()
             checkuser()
 
@@ -82,7 +71,6 @@ class LoginActivity : AppCompatActivity() {
 
     fun getname(): String {
         var name = ""
-
         val myindex = (0 until 10).random()
         name = namearray.get(myindex)
 
@@ -134,62 +122,67 @@ class LoginActivity : AppCompatActivity() {
                 val myname = getname() + random
                 usermap["name"] = myname
                 usermap["email"] = email
-                usermap["uuid"] = it.result.user!!.uid
+                val user1 = it.result.user
+                if (user1 != null) {
+                    usermap["uuid"] = it.result.user!!.uid
+                }
                 usermap["deviceId"] = deviceid
 
-                db.collection("users")
-                    .document(it.result.user!!.uid)
-                    .set(usermap)
-                    .addOnCompleteListener { task2 ->
-                        if (task2.isSuccessful) {
+                it.result?.user?.uid?.let { it1 ->
+                    db.collection("users")
+                        .document(it1)
+                        .set(usermap)
+                        .addOnCompleteListener { task2 ->
+                            if (task2.isSuccessful) {
 
-                            val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-                            val profileUpdates: UserProfileChangeRequest =
-                                UserProfileChangeRequest.Builder()
-                                    .setDisplayName("" + myname)
-                                    .build()
-                            user!!.updateProfile(profileUpdates)
-                                .addOnCompleteListener(OnCompleteListener { task3 ->
-                                    if (task3.isSuccessful) {
-                                        pd.dismiss()
-                                        if (type == 1) {
-                                            myEdit.putInt("selector", 1)
-                                            myEdit.commit()
-                                            val i = Intent(
-                                                this@LoginActivity,
-                                                SelectUserActivity::class.java
-                                            )
-                                            startActivity(i)
-                                            finishAffinity()
-                                        } else if (type == 2) {
-                                            myEdit.putInt("selector", 2)
-                                            myEdit.commit()
-                                            val i = Intent(
-                                                this,
-                                                DrawerActivity2::class.java
-                                            )
-                                            startActivity(i)
-                                            finishAffinity()
+                                val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+                                val profileUpdates: UserProfileChangeRequest =
+                                    UserProfileChangeRequest.Builder()
+                                        .setDisplayName("" + myname)
+                                        .build()
+                                user?.updateProfile(profileUpdates)
+                                    ?.addOnCompleteListener(OnCompleteListener { task3 ->
+                                        if (task3.isSuccessful) {
+                                            pd.dismiss()
+                                            if (type == 1) {
+                                                myEdit.putInt("selector", 1)
+                                                myEdit.commit()
+                                                val i = Intent(
+                                                    this@LoginActivity,
+                                                    SelectUserActivity::class.java
+                                                )
+                                                startActivity(i)
+                                                finishAffinity()
+                                            } else if (type == 2) {
+                                                myEdit.putInt("selector", 2)
+                                                myEdit.commit()
+                                                val i = Intent(
+                                                    this,
+                                                    DrawerActivity2::class.java
+                                                )
+                                                startActivity(i)
+                                                finishAffinity()
+                                            }
+                                        } else {
+                                            pd.dismiss()
+                                            Toast.makeText(
+                                                applicationContext,
+                                                "Failed " + task3.exception,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
-                                    } else {
-                                        pd.dismiss()
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Failed " + task3.exception,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                })
-                        } else {
-                            pd.dismiss()
-                            Toast.makeText(
-                                applicationContext,
-                                "Failed " + task2.exception,
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                                    })
+                            } else {
+                                pd.dismiss()
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Failed " + task2.exception,
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
                         }
-                    }
+                }
 
             } else {
                 pd.dismiss()

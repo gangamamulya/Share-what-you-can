@@ -48,7 +48,7 @@ class DrawerActivity : AppCompatActivity() {
         val navigationView1 = findViewById<NavigationView>(R.id.nav_view)
         val headerview = navigationView1.getHeaderView(0)
         usernameh = headerview.findViewById(R.id.donertv)
-        usernameh.setText("" + FirebaseAuth.getInstance().currentUser?.displayName)
+        usernameh.text = "" + FirebaseAuth.getInstance().currentUser?.displayName
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel =

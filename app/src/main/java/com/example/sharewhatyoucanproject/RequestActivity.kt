@@ -5,11 +5,5 @@ import android.os.Bundle
 
 class RequestActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
 }
 

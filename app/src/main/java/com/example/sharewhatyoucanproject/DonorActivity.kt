@@ -93,8 +93,8 @@ class DonorActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             types
         )
-        spin.setAdapter(arrayAdapter)
-        spin.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        spin.adapter = arrayAdapter
+        spin.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
@@ -107,10 +107,10 @@ class DonorActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
+        }
 
         uploadbtn.setOnClickListener(View.OnClickListener {
-            if (titleet.getText().toString().isEmpty() || descet.getText().toString()
+            if (titleet.text.toString().isEmpty() || descet.text.toString()
                     .isEmpty() || hourset.text.toString().isEmpty()
             ) {
                 Toast.makeText(applicationContext, "Please Fill All Fields", Toast.LENGTH_SHORT)
@@ -214,10 +214,10 @@ class DonorActivity : AppCompatActivity() {
                     super.onLocationResult(locationresult)
 
                     if (locationresult.locations != null) {
-                        if (locationresult.getLocations().size > 0) {
-                            val index: Int = locationresult.getLocations().size - 1
-                            latitude = locationresult.getLocations().get(index).getLatitude()
-                            longitute = locationresult.getLocations().get(index).getLongitude()
+                        if (locationresult.locations.size > 0) {
+                            val index: Int = locationresult.locations.size - 1
+                            latitude = locationresult.locations.get(index).latitude
+                            longitute = locationresult.locations.get(index).longitude
 
                             val point = GeoPoint(latitude, longitute)
                             val fpvar = filepath

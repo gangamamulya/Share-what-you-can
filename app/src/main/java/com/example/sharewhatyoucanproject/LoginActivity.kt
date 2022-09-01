@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
         myEdit = sharedPreferences.edit()
-        type = getIntent().getIntExtra("type", 0)
+        type = intent.getIntExtra("type", 0)
         pd = ProgressDialog(this)
         pd.setTitle("Please Wait")
         mytv = findViewById(R.id.mytv)
@@ -41,9 +41,9 @@ class LoginActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
 
         if (type == 1) {
-            mytv.setText("Doner")
+            mytv.text = "Doner"
         } else if (type == 2) {
-            mytv.setText("Receiver")
+            mytv.text = "Receiver"
         }
         namearray = ArrayList()
         namearray.add("Tom")
@@ -86,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val size = task.getResult().size()
+                    val size = task.result.size()
 
                     if (size == 0) {
                         createuser()

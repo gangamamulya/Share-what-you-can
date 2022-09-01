@@ -37,7 +37,7 @@ class SelectUserActivity : AppCompatActivity() {
     }
 
     fun sendtodb(type: String) {
-        auth?.currentUser?.uid?.let {
+        auth.currentUser?.uid?.let {
             db.collection("users")
                 .document(it)
                 .update("type", type)

@@ -66,14 +66,14 @@ class HomeFragment : Fragment() {
                             super.onLocationResult(locationresult)
 
                             if (locationresult.locations != null) {
-                                if (locationresult.getLocations().size > 0) {
+                                if (locationresult.locations.size > 0) {
 
-                                    val index: Int = locationresult.getLocations().size - 1
+                                    val index: Int = locationresult.locations.size - 1
 
                                     latitude =
-                                        locationresult.getLocations().get(index).getLatitude()
+                                        locationresult.locations.get(index).latitude
                                     longitute =
-                                        locationresult.getLocations().get(index).getLongitude()
+                                        locationresult.locations.get(index).longitude
 
                                     Toast.makeText(
                                         context,

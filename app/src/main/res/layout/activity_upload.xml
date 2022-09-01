@@ -57,7 +57,6 @@
         android:layout_height="wrap_content"
         android:textColorHint="#696969"
         app:hintTextColor="#696969"
-
         app:boxStrokeColor="#FA2E2E"
         android:hint="Enter Description">
 
@@ -77,13 +76,16 @@
     <com.google.android.material.textfield.TextInputLayout
 
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
-        android:textColorHint="#696969"
         app:hintTextColor="#696969"
+        android:layout_width="match_parent"
+        android:textColorHint="#696969"
+        android:layout_marginTop="20dp"
+        android:hint="Cooked Hours Before"
+
+
         app:boxStrokeColor="#FA2E2E"
-        android:hint="Cooked Hours Before">
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/hourset"

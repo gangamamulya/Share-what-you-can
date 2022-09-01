@@ -1,11 +1,11 @@
 package com.example.sharewhatyoucanproject
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -22,13 +22,17 @@ class SelectUserActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         individual = findViewById(R.id.individual)
-        pantry.setOnClickListener(View.OnClickListener {
-            sendtodb("pantry")
-        })
+        pantry.setOnClickListener(
+            View.OnClickListener {
+                sendtodb("pantry")
+            }
+        )
 
-        individual.setOnClickListener(View.OnClickListener {
-            sendtodb("individual")
-        })
+        individual.setOnClickListener(
+            View.OnClickListener {
+                sendtodb("individual")
+            }
+        )
     }
 
     fun sendtodb(type: String) {

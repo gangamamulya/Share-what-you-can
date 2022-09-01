@@ -84,7 +84,8 @@ class DonorActivity : AppCompatActivity() {
                 intent.type = "image/*"
                 intent.action = Intent.ACTION_GET_CONTENT
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), 0)
-            })
+            }
+        )
 
         arrayAdapter = ArrayAdapter<String>(
             applicationContext,
@@ -107,63 +108,65 @@ class DonorActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        uploadbtn.setOnClickListener(View.OnClickListener {
-            if (titleet.text.toString().isEmpty() || descet.text.toString()
+        uploadbtn.setOnClickListener(
+            View.OnClickListener {
+                if (titleet.text.toString().isEmpty() || descet.text.toString()
                     .isEmpty() || hourset.text.toString().isEmpty()
-            ) {
-                Toast.makeText(applicationContext, "Please Fill All Fields", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-
-                if (!hasPermissions(
-                        applicationContext,
-                        *permissions
-                    )
                 ) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Please Allow Location To Post",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    ActivityCompat.requestPermissions(
-                        this@DonorActivity,
-                        permissions,
-                        permission_all
-                    )
+                    Toast.makeText(applicationContext, "Please Fill All Fields", Toast.LENGTH_SHORT)
+                        .show()
                 } else {
-                    if (isGPSEnabled(applicationContext)) {
-                        if (filepath != null) {
-                            pd.show()
-                            if (typestr.equals("Cooked Food") && Integer.parseInt(hourset.text.toString()) > 48) {
 
-                                pd.dismiss()
-                                Toast.makeText(
-                                    applicationContext,
-                                    "You Cannot Upload Food",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else if (typestr.equals("Groceries") && Integer.parseInt(hourset.text.toString()) > 1460) {
-                                Toast.makeText(
-                                    applicationContext,
-                                    "You Cannot Upload Food",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                pd.dismiss()
+                    if (!hasPermissions(
+                            applicationContext,
+                            *permissions
+                        )
+                    ) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Please Allow Location To Post",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        ActivityCompat.requestPermissions(
+                            this@DonorActivity,
+                            permissions,
+                            permission_all
+                        )
+                    } else {
+                        if (isGPSEnabled(applicationContext)) {
+                            if (filepath != null) {
+                                pd.show()
+                                if (typestr.equals("Cooked Food") && Integer.parseInt(hourset.text.toString()) > 48) {
+
+                                    pd.dismiss()
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "You Cannot Upload Food",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else if (typestr.equals("Groceries") && Integer.parseInt(hourset.text.toString()) > 1460) {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "You Cannot Upload Food",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    pd.dismiss()
+                                } else {
+                                    uploadImage()
+                                }
                             } else {
-                                uploadImage()
+                                Toast.makeText(applicationContext, "Choose a image", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         } else {
-                            Toast.makeText(applicationContext, "Choose a image", Toast.LENGTH_SHORT)
+
+                            Toast.makeText(applicationContext, "Open Your GPS", Toast.LENGTH_SHORT)
                                 .show()
                         }
-                    } else {
-
-                        Toast.makeText(applicationContext, "Open Your GPS", Toast.LENGTH_SHORT)
-                            .show()
                     }
                 }
             }
-        })
+        )
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -187,9 +190,9 @@ class DonorActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
         ) {
 
             ActivityCompat.requestPermissions(this@DonorActivity, permissions, permission_all)
@@ -198,87 +201,91 @@ class DonorActivity : AppCompatActivity() {
         }
 
         LocationServices.getFusedLocationProviderClient(applicationContext)
-            .requestLocationUpdates(locationRequest, object : LocationCallback() {
-                override fun onLocationResult(locationresult: LocationResult) {
-                    super.onLocationResult(locationresult)
+            .requestLocationUpdates(
+                locationRequest,
+                object : LocationCallback() {
+                    override fun onLocationResult(locationresult: LocationResult) {
+                        super.onLocationResult(locationresult)
 
-                    if (locationresult.locations != null) {
-                        if (locationresult.locations.size > 0) {
-                            val index: Int = locationresult.locations.size - 1
-                            latitude = locationresult.locations.get(index).latitude
-                            longitute = locationresult.locations.get(index).longitude
+                        if (locationresult.locations != null) {
+                            if (locationresult.locations.size > 0) {
+                                val index: Int = locationresult.locations.size - 1
+                                latitude = locationresult.locations.get(index).latitude
+                                longitute = locationresult.locations.get(index).longitude
 
-                            val point = GeoPoint(latitude, longitute)
-                            val fpvar = filepath
-                            if (fpvar != null) {
-                                val ref = storageReference.child("images/" + UUID.randomUUID())
-                                uploadTask = ref.putFile(fpvar)
-                                uploadTask.continueWithTask { task ->
-                                    if (!task.isSuccessful) {
-                                        pd.show()
-                                        val excep = task.exception
-                                        if (excep != null) {
-                                            throw excep
+                                val point = GeoPoint(latitude, longitute)
+                                val fpvar = filepath
+                                if (fpvar != null) {
+                                    val ref = storageReference.child("images/" + UUID.randomUUID())
+                                    uploadTask = ref.putFile(fpvar)
+                                    uploadTask.continueWithTask { task ->
+                                        if (!task.isSuccessful) {
+                                            pd.show()
+                                            val excep = task.exception
+                                            if (excep != null) {
+                                                throw excep
+                                            }
+                                        }
+                                        ref.downloadUrl
+                                    }.addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            val downloadUri = task.result
+                                            val postmap: MutableMap<String, Any?> = HashMap()
+                                            postmap["imageUrl"] = downloadUri.toString()
+                                            postmap["date"] = FieldValue.serverTimestamp()
+                                            postmap["title"] = titleet.text.toString()
+                                            postmap["description"] = descet.text.toString()
+                                            postmap["status"] = 0
+                                            postmap["type"] = typestr
+                                            postmap["location"] = point
+                                            db.collection("posts")
+                                                .add(postmap)
+                                                .addOnCompleteListener { task ->
+                                                    pd.show()
+                                                    if (task.isSuccessful) {
+                                                        Toast.makeText(
+                                                            this@DonorActivity,
+                                                            "Post Added",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        finish()
+                                                    } else {
+                                                        pd.dismiss()
+                                                        Toast.makeText(
+                                                            this@DonorActivity,
+                                                            "Failed " + task.exception,
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                }
+                                        } else {
+                                            pd.dismiss()
+                                            Toast.makeText(
+                                                this@DonorActivity,
+                                                "Failed " + task.exception,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                     }
-                                    ref.downloadUrl
-                                }.addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        val downloadUri = task.result
-                                        val postmap: MutableMap<String, Any?> = HashMap()
-                                        postmap["imageUrl"] = downloadUri.toString()
-                                        postmap["date"] = FieldValue.serverTimestamp()
-                                        postmap["title"] = titleet.text.toString()
-                                        postmap["description"] = descet.text.toString()
-                                        postmap["status"] = 0
-                                        postmap["type"] = typestr
-                                        postmap["location"] = point
-                                        db.collection("posts")
-                                            .add(postmap)
-                                            .addOnCompleteListener { task ->
-                                                pd.show()
-                                                if (task.isSuccessful) {
-                                                    Toast.makeText(
-                                                        this@DonorActivity,
-                                                        "Post Added",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                    finish()
-                                                } else {
-                                                    pd.dismiss()
-                                                    Toast.makeText(
-                                                        this@DonorActivity,
-                                                        "Failed " + task.exception,
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                }
-                                            }
-                                    } else {
-                                        pd.dismiss()
-                                        Toast.makeText(
-                                            this@DonorActivity,
-                                            "Failed " + task.exception,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
+                                } else {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Please Select a Image First",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             } else {
                                 Toast.makeText(
                                     applicationContext,
-                                    "Please Select a Image First",
+                                    "Some Technical Error. Please Retry",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-                        } else {
-                            Toast.makeText(
-                                applicationContext,
-                                "Some Technical Error. Please Retry",
-                                Toast.LENGTH_SHORT
-                            ).show()
                         }
                     }
-                }
-            }, Looper.getMainLooper())
+                },
+                Looper.getMainLooper()
+            )
     }
 
     private fun isGPSEnabled(context: Context): Boolean {
@@ -295,11 +302,11 @@ class DonorActivity : AppCompatActivity() {
         if (context != null) {
             for (permission in permissions) {
                 if (permission?.let {
-                        ActivityCompat.checkSelfPermission(
+                    ActivityCompat.checkSelfPermission(
                             context,
                             it
                         )
-                    } != PackageManager.PERMISSION_GRANTED
+                } != PackageManager.PERMISSION_GRANTED
                 ) {
                     return false
                 }

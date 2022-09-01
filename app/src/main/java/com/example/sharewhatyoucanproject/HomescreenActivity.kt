@@ -1,10 +1,10 @@
 package com.example.sharewhatyoucanproject
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class HomescreenActivity : AppCompatActivity() {
@@ -17,16 +17,20 @@ class HomescreenActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         donerimg = findViewById(R.id.donerimg)
         receiverimg = findViewById(R.id.receiverimg)
-        donerimg?.setOnClickListener(View.OnClickListener {
-            val i = Intent(this@HomescreenActivity, LoginActivity::class.java)
-            i.putExtra("type", 1)
-            startActivity(i)
-        })
-        receiverimg?.setOnClickListener(View.OnClickListener {
-            val i = Intent(this@HomescreenActivity, LoginActivity::class.java)
-            i.putExtra("type", 2)
-            startActivity(i)
-        })
+        donerimg?.setOnClickListener(
+            View.OnClickListener {
+                val i = Intent(this@HomescreenActivity, LoginActivity::class.java)
+                i.putExtra("type", 1)
+                startActivity(i)
+            }
+        )
+        receiverimg?.setOnClickListener(
+            View.OnClickListener {
+                val i = Intent(this@HomescreenActivity, LoginActivity::class.java)
+                i.putExtra("type", 2)
+                startActivity(i)
+            }
+        )
     }
 
     override fun onStart() {

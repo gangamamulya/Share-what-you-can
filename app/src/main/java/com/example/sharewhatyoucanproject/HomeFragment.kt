@@ -42,7 +42,8 @@ class HomeFragment : Fragment() {
         checklocation = view.findViewById(R.id.checklocation)
         convertbtn = view.findViewById(R.id.convertbtn)
         locationRequest = com.google.android.gms.location.LocationRequest.create()
-        checklocation.setOnClickListener(View.OnClickListener {
+        checklocation.setOnClickListener(
+            View.OnClickListener {
             if (context?.let { it1 ->
                     ActivityCompat.checkSelfPermission(
                         it1,
@@ -86,16 +87,21 @@ class HomeFragment : Fragment() {
                         }
                     }, Looper.getMainLooper())
             }
-        })
-        convertbtn.setOnClickListener(View.OnClickListener {
+        }
+        )
+        convertbtn.setOnClickListener(
+            View.OnClickListener {
             val point = GeoPoint(latitude, longitute)
             Toast.makeText(context, "Converted Sucesgansful: " + point, Toast.LENGTH_SHORT).show()
-        })
+        }
+        )
 
-        uploadlayout?.setOnClickListener(View.OnClickListener {
+        uploadlayout?.setOnClickListener(
+            View.OnClickListener {
             val i = Intent(activity, DonorActivity::class.java)
             startActivity(i)
-        })
+        }
+        )
         return view
     }
 }

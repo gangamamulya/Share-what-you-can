@@ -17,16 +17,20 @@ class HomescreenActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         donerimg = findViewById(R.id.donerimg)
         receiverimg = findViewById(R.id.receiverimg)
-        donerimg?.setOnClickListener(View.OnClickListener {
+        donerimg?.setOnClickListener(
+            View.OnClickListener {
             val i = Intent(this@HomescreenActivity, LoginActivity::class.java)
             i.putExtra("type", 1)
             startActivity(i)
-        })
-        receiverimg?.setOnClickListener(View.OnClickListener {
+        }
+        )
+        receiverimg?.setOnClickListener(
+            View.OnClickListener {
             val i = Intent(this@HomescreenActivity, LoginActivity::class.java)
             i.putExtra("type", 2)
             startActivity(i)
-        })
+        }
+        )
     }
 
     override fun onStart() {

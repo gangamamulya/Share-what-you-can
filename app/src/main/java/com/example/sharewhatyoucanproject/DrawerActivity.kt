@@ -49,14 +49,12 @@ class DrawerActivity : AppCompatActivity() {
         val headerview = navigationView1.getHeaderView(0)
         usernameh = headerview.findViewById(R.id.donertv)
         usernameh.text = "" + FirebaseAuth.getInstance().currentUser?.displayName
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel =
                 NotificationChannel("myCh", "Channel1", NotificationManager.IMPORTANCE_HIGH)
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
         }
-
         FirebaseMessaging.getInstance()
             .subscribeToTopic("" + FirebaseAuth.getInstance().currentUser?.uid)
         navigationView1.menu.getItem(1).setOnMenuItemClickListener {
@@ -78,7 +76,6 @@ class DrawerActivity : AppCompatActivity() {
             startActivity(i)
             false
         }
-
         navigationView1.menu.getItem(4).setOnMenuItemClickListener {
             val i = Intent(this@DrawerActivity, ReviewActivity::class.java)
             drawerLayout.closeDrawers()

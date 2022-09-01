@@ -22,13 +22,16 @@ class SelectUserActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         individual = findViewById(R.id.individual)
-        pantry.setOnClickListener(View.OnClickListener {
+        pantry.setOnClickListener(
+            View.OnClickListener {
             sendtodb("pantry")
-        })
-
-        individual.setOnClickListener(View.OnClickListener {
+        }
+        )
+        individual.setOnClickListener(
+            View.OnClickListener {
             sendtodb("individual")
-        })
+        }
+        )
     }
 
     fun sendtodb(type: String) {

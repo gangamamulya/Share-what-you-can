@@ -11,7 +11,14 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Spinner
+import android.widget.ArrayAdapter
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationCallback
@@ -84,8 +91,8 @@ class DonorActivity : AppCompatActivity() {
                 intent.type = "image/*"
                 intent.action = Intent.ACTION_GET_CONTENT
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), 0)
-            })
-
+            }
+        )
         arrayAdapter = ArrayAdapter<String>(
             applicationContext,
             android.R.layout.simple_spinner_dropdown_item,
@@ -107,14 +114,13 @@ class DonorActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        uploadbtn.setOnClickListener(View.OnClickListener {
-            if (titleet.text.toString().isEmpty() || descet.text.toString()
-                    .isEmpty() || hourset.text.toString().isEmpty()
+        uploadbtn.setOnClickListener(
+            View.OnClickListener {
+            if (titleet.text.toString().isEmpty() || descet.text.toString().isEmpty() || hourset.text.toString().isEmpty()
             ) {
                 Toast.makeText(applicationContext, "Please Fill All Fields", Toast.LENGTH_SHORT)
                     .show()
             } else {
-
                 if (!hasPermissions(
                         applicationContext,
                         *permissions
@@ -135,7 +141,6 @@ class DonorActivity : AppCompatActivity() {
                         if (filepath != null) {
                             pd.show()
                             if (typestr.equals("Cooked Food") && Integer.parseInt(hourset.text.toString()) > 48) {
-
                                 pd.dismiss()
                                 Toast.makeText(
                                     applicationContext,
@@ -157,13 +162,13 @@ class DonorActivity : AppCompatActivity() {
                                 .show()
                         }
                     } else {
-
                         Toast.makeText(applicationContext, "Open Your GPS", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
             }
-        })
+        }
+        )
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -171,7 +176,6 @@ class DonorActivity : AppCompatActivity() {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
-
                     filepath = data.data
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, data.data)
                     foodimg.setImageBitmap(bitmap)
@@ -193,7 +197,6 @@ class DonorActivity : AppCompatActivity() {
         ) {
 
             ActivityCompat.requestPermissions(this@DonorActivity, permissions, permission_all)
-
             return
         }
 
@@ -201,13 +204,11 @@ class DonorActivity : AppCompatActivity() {
             .requestLocationUpdates(locationRequest, object : LocationCallback() {
                 override fun onLocationResult(locationresult: LocationResult) {
                     super.onLocationResult(locationresult)
-
                     if (locationresult.locations != null) {
                         if (locationresult.locations.size > 0) {
                             val index: Int = locationresult.locations.size - 1
                             latitude = locationresult.locations.get(index).latitude
                             longitute = locationresult.locations.get(index).longitude
-
                             val point = GeoPoint(latitude, longitute)
                             val fpvar = filepath
                             if (fpvar != null) {

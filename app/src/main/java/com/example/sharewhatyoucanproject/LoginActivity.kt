@@ -57,12 +57,14 @@ class LoginActivity : AppCompatActivity() {
         namearray.add("Henry")
         namearray.add("Benjamin")
         submitdevice = findViewById(R.id.submitdevice)
-        submitdevice.setOnClickListener(View.OnClickListener {
+        submitdevice.setOnClickListener(
+            View.OnClickListener {
             deviceid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
             email = "s" + deviceid + "@gmail.com"
             pd.show()
             checkuser()
-        })
+        }
+        )
     }
 
     fun getname(): String {
@@ -79,7 +81,6 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val size = task.result.size()
-
                     if (size == 0) {
                         createuser()
                     } else {
@@ -97,7 +98,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun createuser() {
-
         auth.createUserWithEmailAndPassword(
             email,
             "Test@123"
@@ -115,14 +115,12 @@ class LoginActivity : AppCompatActivity() {
                     usermap["uuid"] = it.result.user!!.uid
                 }
                 usermap["deviceId"] = deviceid
-
                 it.result?.user?.uid?.let { it1 ->
                     db.collection("users")
                         .document(it1)
                         .set(usermap)
                         .addOnCompleteListener { task2 ->
                             if (task2.isSuccessful) {
-
                                 val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
                                 val profileUpdates: UserProfileChangeRequest =
                                     UserProfileChangeRequest.Builder()

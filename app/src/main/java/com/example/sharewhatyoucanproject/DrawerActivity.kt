@@ -59,16 +59,12 @@ class DrawerActivity : AppCompatActivity() {
 
         FirebaseMessaging.getInstance()
             .subscribeToTopic("" + FirebaseAuth.getInstance().currentUser?.uid)
-
-
         navigationView1.menu.getItem(1).setOnMenuItemClickListener {
             drawerLayout.closeDrawers()
             val i = Intent(this@DrawerActivity, PostsActivity::class.java)
             startActivity(i)
             false
         }
-
-
         navigationView1.menu.getItem(2).setOnMenuItemClickListener {
             drawerLayout.closeDrawers()
             val i = Intent(this@DrawerActivity, RequestActivity::class.java)
@@ -76,7 +72,6 @@ class DrawerActivity : AppCompatActivity() {
             startActivity(i)
             false
         }
-
         navigationView1.menu.getItem(3).setOnMenuItemClickListener {
             drawerLayout.closeDrawers()
             val i = Intent(this@DrawerActivity, UserActivity::class.java)
@@ -90,9 +85,7 @@ class DrawerActivity : AppCompatActivity() {
             startActivity(i)
             false
         }
-
         navigationView1.menu.getItem(5).setOnMenuItemClickListener {
-
             drawerLayout.closeDrawers()
             pd.show()
             pd.dismiss()
@@ -100,14 +93,11 @@ class DrawerActivity : AppCompatActivity() {
             val i = Intent(this, HomescreenActivity::class.java)
             startActivity(i)
             finishAffinity()
-
             false
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
         menuInflater.inflate(R.menu.drawer, menu)
         return true
     }

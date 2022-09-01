@@ -27,9 +27,7 @@ import com.google.firebase.storage.UploadTask
 import java.util.*
 import kotlin.collections.HashMap
 
-
 class DonorActivity : AppCompatActivity() {
-
     lateinit var foodimg: ImageView
     var filepath: Uri? = null
     lateinit var uploadbtn: Button
@@ -80,13 +78,13 @@ class DonorActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         foodimg = findViewById(R.id.foodimg)
-        foodimg.setOnClickListener(View.OnClickListener {
-            val intent = Intent()
-            intent.type = "image/*"
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 0)
-        })
-
+        foodimg.setOnClickListener(
+            View.OnClickListener {
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 0)
+            })
 
         arrayAdapter = ArrayAdapter<String>(
             applicationContext,
@@ -144,7 +142,6 @@ class DonorActivity : AppCompatActivity() {
                                     "You Cannot Upload Food",
                                     Toast.LENGTH_SHORT
                                 ).show()
-
                             } else if (typestr.equals("Groceries") && Integer.parseInt(hourset.text.toString()) > 1460) {
                                 Toast.makeText(
                                     applicationContext,
@@ -152,26 +149,19 @@ class DonorActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 pd.dismiss()
-
                             } else {
                                 uploadImage()
                             }
-
-
                         } else {
                             Toast.makeText(applicationContext, "Choose a image", Toast.LENGTH_SHORT)
                                 .show()
                         }
-
                     } else {
 
                         Toast.makeText(applicationContext, "Open Your GPS", Toast.LENGTH_SHORT)
                             .show()
-
                     }
-
                 }
-
             }
         })
     }
@@ -185,7 +175,6 @@ class DonorActivity : AppCompatActivity() {
                     filepath = data.data
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, data.data)
                     foodimg.setImageBitmap(bitmap)
-
                 }
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(applicationContext, "Canceled", Toast.LENGTH_SHORT).show()
@@ -264,7 +253,6 @@ class DonorActivity : AppCompatActivity() {
                                                     ).show()
                                                 }
                                             }
-
                                     } else {
                                         pd.dismiss()
                                         Toast.makeText(
@@ -281,7 +269,6 @@ class DonorActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-
                         } else {
                             Toast.makeText(
                                 applicationContext,
@@ -290,14 +277,9 @@ class DonorActivity : AppCompatActivity() {
                             ).show()
                         }
                     }
-
-
                 }
             }, Looper.getMainLooper())
-
-
     }
-
 
     private fun isGPSEnabled(context: Context): Boolean {
         var locationManager: LocationManager? = null
@@ -308,7 +290,6 @@ class DonorActivity : AppCompatActivity() {
         isenable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         return isenable
     }
-
 
     fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
         if (context != null) {

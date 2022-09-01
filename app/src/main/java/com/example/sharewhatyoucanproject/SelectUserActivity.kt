@@ -9,7 +9,6 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-
 class SelectUserActivity : AppCompatActivity() {
     lateinit var pantry: LinearLayout
     lateinit var individual: LinearLayout
@@ -24,16 +23,12 @@ class SelectUserActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         individual = findViewById(R.id.individual)
         pantry.setOnClickListener(View.OnClickListener {
-
             sendtodb("pantry")
-
         })
 
         individual.setOnClickListener(View.OnClickListener {
             sendtodb("individual")
-
         })
-
     }
 
     fun sendtodb(type: String) {

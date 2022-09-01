@@ -7,13 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
-
 
 class LoginActivity : AppCompatActivity() {
     lateinit var mytv: TextView
@@ -39,7 +40,6 @@ class LoginActivity : AppCompatActivity() {
         mytv = findViewById(R.id.mytv)
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
-
         if (type == 1) {
             mytv.text = "Doner"
         } else if (type == 2) {
@@ -56,29 +56,21 @@ class LoginActivity : AppCompatActivity() {
         namearray.add("William")
         namearray.add("Henry")
         namearray.add("Benjamin")
-
         submitdevice = findViewById(R.id.submitdevice)
         submitdevice.setOnClickListener(View.OnClickListener {
             deviceid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
             email = "s" + deviceid + "@gmail.com"
             pd.show()
             checkuser()
-
         })
-
-
     }
 
     fun getname(): String {
         var name = ""
         val myindex = (0 until 10).random()
         name = namearray.get(myindex)
-
         return name
-
-
     }
-
 
     fun checkuser() {
         db.collection("users")
@@ -93,7 +85,6 @@ class LoginActivity : AppCompatActivity() {
                     } else {
                         loginuser()
                     }
-
                 } else {
                     pd.dismiss()
                     Toast.makeText(
@@ -101,12 +92,9 @@ class LoginActivity : AppCompatActivity() {
                         "Failed " + task.exception,
                         Toast.LENGTH_SHORT
                     ).show()
-
                 }
-
             }
     }
-
 
     fun createuser() {
 
@@ -183,7 +171,6 @@ class LoginActivity : AppCompatActivity() {
                             }
                         }
                 }
-
             } else {
                 pd.dismiss()
                 Toast.makeText(applicationContext, "Failed " + it.exception, Toast.LENGTH_SHORT)
@@ -191,7 +178,6 @@ class LoginActivity : AppCompatActivity() {
             }
         })
     }
-
 
     fun loginuser() {
         auth.signInWithEmailAndPassword(
@@ -218,7 +204,5 @@ class LoginActivity : AppCompatActivity() {
                     .show()
             }
         })
-
     }
-
 }

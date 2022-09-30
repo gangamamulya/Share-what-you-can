@@ -1,44 +1,19 @@
 package com.example.sharewhatyoucanproject
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import com.example.sharewhatyoucanproject.R
-import android.content.Intent
-import com.example.sharewhatyoucanproject.HomescreenActivity
-import com.example.sharewhatyoucanproject.MainActivity
-import com.example.sharewhatyoucanproject.LocationTrack
-import android.widget.EditText
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.database.DatabaseReference
-import android.app.ProgressDialog
 import android.Manifest.permission
-import android.os.Build
-import com.example.sharewhatyoucanproject.DonorActivity
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.database.FirebaseDatabase
-import android.widget.Toast
-import android.content.pm.PackageManager
-import android.annotation.TargetApi
-import android.content.DialogInterface
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Service
-import android.graphics.Bitmap
-import android.provider.MediaStore
-import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
-import android.webkit.MimeTypeMap
-import com.google.android.gms.tasks.OnSuccessListener
-import com.example.sharewhatyoucanproject.ImageUploadInfo
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.firebase.storage.OnProgressListener
 import android.location.LocationListener
 import android.location.LocationManager
-import androidx.core.app.ActivityCompat
+import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
-import com.example.sharewhatyoucanproject.DashboardActivity
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import java.lang.Exception
 
 class LocationTrack(private val mContext: Context) : Service(), LocationListener {
@@ -48,14 +23,13 @@ class LocationTrack(private val mContext: Context) : Service(), LocationListener
     var loc: Location? = null
     private var latitude = 0.0
     private var longitude = 0.0
-    protected var locationManager: LocationManager? = null// TODO: Consider calling
+    protected var locationManager: LocationManager? = null // TODO: Consider calling
     //    ActivityCompat#requestPermissions
     // here to request the missing permissions, and then overriding
     //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
     //                                          int[] grantResults)
     // to handle the case where the user grants the permission. See the documentation
     // for ActivityCompat#requestPermissions for more details.
-
 
     /*if (checkNetwork) {
 
@@ -112,10 +86,11 @@ class LocationTrack(private val mContext: Context) : Service(), LocationListener
                     if (checkGPS) {
                         if (ActivityCompat.checkSelfPermission(
                                 mContext,
-                                permission.ACCESS_FINE_LOCATION
+                                permission.ACCESS_FINE_LOCATION,
                             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                                mContext, permission.ACCESS_COARSE_LOCATION
-                            ) != PackageManager.PERMISSION_GRANTED
+                                    mContext,
+                                    permission.ACCESS_COARSE_LOCATION,
+                                ) != PackageManager.PERMISSION_GRANTED
                         ) {
                             // TODO: Consider calling
                             //    ActivityCompat#requestPermissions
@@ -128,7 +103,8 @@ class LocationTrack(private val mContext: Context) : Service(), LocationListener
                         locationManager!!.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(),
+                            this,
                         )
                         if (locationManager != null) {
                             loc = locationManager!!
@@ -140,10 +116,9 @@ class LocationTrack(private val mContext: Context) : Service(), LocationListener
                         }
                     }
 
-
                     /*if (checkNetwork) {
-       
-       
+
+
                            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                // TODO: Consider calling
                                //    ActivityCompat#requestPermissions
@@ -157,13 +132,13 @@ class LocationTrack(private val mContext: Context) : Service(), LocationListener
                                    LocationManager.NETWORK_PROVIDER,
                                    MIN_TIME_BW_UPDATES,
                                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-       
+
                            if (locationManager != null) {
                                loc = locationManager
                                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-       
+
                            }
-       
+
                            if (loc != null) {
                                latitude = loc.getLatitude();
                                longitude = loc.getLongitude();
@@ -196,7 +171,7 @@ class LocationTrack(private val mContext: Context) : Service(), LocationListener
 
     fun showSettingsAlert() {
         val alertDialog = AlertDialog.Builder(
-            mContext
+            mContext,
         )
         alertDialog.setTitle("GPS is not Enabled!")
         alertDialog.setMessage("Do you want to turn on GPS?")
@@ -212,10 +187,11 @@ class LocationTrack(private val mContext: Context) : Service(), LocationListener
         if (locationManager != null) {
             if (ActivityCompat.checkSelfPermission(
                     mContext,
-                    permission.ACCESS_FINE_LOCATION
+                    permission.ACCESS_FINE_LOCATION,
                 ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    mContext, permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
+                        mContext,
+                        permission.ACCESS_COARSE_LOCATION,
+                    ) != PackageManager.PERMISSION_GRANTED
             ) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions

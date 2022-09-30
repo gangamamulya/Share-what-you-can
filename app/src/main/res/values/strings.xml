@@ -103,4 +103,6 @@
     <string name="title_activity_dashboard">DashboardActivity</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="menu_home">Home</string>
 </resources>

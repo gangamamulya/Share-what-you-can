@@ -1,7 +1,8 @@
-package com.example.sharewhatyoucanproject
+package com.example.sharewhatyoucanproject.donor
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sharewhatyoucanproject.R
 
 class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

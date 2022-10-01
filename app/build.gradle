@@ -113,8 +113,6 @@ configurations {
 }
 
 dependencies {
-
-    implementation 'com.google.firebase:firebase-messaging-ktx:23.0.8'
     ktlint("com.pinterest:ktlint:0.47.1") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))

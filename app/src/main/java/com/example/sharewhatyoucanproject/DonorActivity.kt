@@ -107,20 +107,22 @@ class DonorActivity : AppCompatActivity() {
         )
         spin?.setAdapter(arrayAdapter)
 
-        spin.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View,
-                position: Int,
-                id: Long,
-            ) {
-                typestr = types[position]
-                Toast.makeText(applicationContext, "" + typestr, Toast.LENGTH_SHORT)
-                    .show()
-            }
+        spin.setOnItemSelectedListener(
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View,
+                    position: Int,
+                    id: Long,
+                ) {
+                    typestr = types[position]
+                    Toast.makeText(applicationContext, "" + typestr, Toast.LENGTH_SHORT)
+                        .show()
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        },)
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            },
+        )
 
         uploadbtn.setOnClickListener(
             View.OnClickListener {
@@ -167,7 +169,11 @@ class DonorActivity : AppCompatActivity() {
                                     uploadImage()
                                 }
                             } else {
-                                Toast.makeText(applicationContext, "Choose a image", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Choose a image",
+                                    Toast.LENGTH_SHORT,
+                                )
                                     .show()
                             }
                         } else {

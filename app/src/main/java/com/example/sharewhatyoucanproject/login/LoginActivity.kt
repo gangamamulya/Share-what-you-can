@@ -1,220 +1,110 @@
-package com.example.sharewhatyoucanproject
+package com.example.sharewhatyoucanproject.login
 
 import android.app.ProgressDialog
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.Settings
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.ViewModelProvider
+import com.example.sharewhatyoucanproject.DrawerActivity
+import com.example.sharewhatyoucanproject.SelectUserActivity
+import com.example.sharewhatyoucanproject.databinding.ActivityLoginBinding
+import com.example.sharewhatyoucanproject.models.UserType
+import com.example.sharewhatyoucanproject.utils.editSharedPreferencesSelector
+import com.example.sharewhatyoucanproject.utils.showToast
 
 class LoginActivity : AppCompatActivity() {
-    lateinit var mytv: TextView
-
-    lateinit var submitdevice: Button
-    lateinit var email: String
-    lateinit var auth: FirebaseAuth
-    lateinit var db: FirebaseFirestore
-    var type = 0
-    lateinit var deviceid: String
-    lateinit var pd: ProgressDialog
-    lateinit var sharedPreferences: SharedPreferences
-    lateinit var myEdit: SharedPreferences.Editor
-    lateinit var namearray: ArrayList<String>
+    private lateinit var binding: ActivityLoginBinding
+    lateinit var loginViewModel: LoginViewModel
+    lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        progressDialog = ProgressDialog(this)
+        progressDialog.setTitle("Please Wait")
         supportActionBar?.hide()
 
-        sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
-        myEdit = sharedPreferences.edit()
-        type = getIntent().getIntExtra("type", 0)
-        pd = ProgressDialog(this)
-        pd.setTitle("Please Wait")
-        mytv = findViewById(R.id.mytv)
+        loginViewModel = ViewModelProvider(
+            this,
+            LoginViewModelFactory(),
+        )[LoginViewModel::class.java]
 
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
+        val type = intent.getIntExtra("type", 0)
 
-        if (type == 1) {
-            mytv.setText("Doner")
-        } else if (type == 2) {
-            mytv.setText("Receiver")
-        }
-        namearray = ArrayList()
-        namearray.add("Tom")
-        namearray.add("Harry")
-        namearray.add("Tony")
-        namearray.add("Noah")
-        namearray.add("Emma")
-        namearray.add("Oliver")
-        namearray.add("James")
-        namearray.add("William")
-        namearray.add("Henry")
-        namearray.add("Benjamin")
+        val typevar1 = UserType.values()[type]
 
-        submitdevice = findViewById(R.id.submitdevice)
+        loginViewModel.type = typevar1
 
-        submitdevice.setOnClickListener(
-            View.OnClickListener {
-                deviceid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-                email = "s" + deviceid + "@gmail.com"
-
-                pd.show()
-                checkuser()
-            },
-        )
-    }
-
-    fun getname(): String {
-        var name = ""
-
-        val myindex = (0 until 10).random()
-        name = namearray.get(myindex)
-
-        return name
-    }
-
-    fun checkuser() {
-        db.collection("users")
-            .whereEqualTo("email", email)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val size = task.getResult().size()
-
-                    if (size == 0) {
-                        createuser()
-                    } else {
-                        loginuser()
-                    }
-                } else {
-                    pd.dismiss()
-                    Toast.makeText(
-                        applicationContext,
-                        "Failed " + task.exception,
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+        loginViewModel.checkResult.observe(this) { result ->
+            result?.let {
+                progressDialog.dismiss()
+                // this.showToast(result)
+                // TODO show toast
+                loginViewModel.checkResult.value = null
             }
-    }
+        }
 
-    fun createuser() {
-        auth.createUserWithEmailAndPassword(
-            email,
-            "Test@123",
-        ).addOnCompleteListener(
-            OnCompleteListener {
-                if (it.isSuccessful) {
-                    pd.dismiss()
-                    Toast.makeText(applicationContext, "Created", Toast.LENGTH_SHORT).show()
-                    val usermap: MutableMap<String, String> = HashMap()
-                    val random = (1111 until 9999).random()
-                    val myname = getname() + random
-                    usermap["name"] = myname
-                    usermap["email"] = email
-                    usermap["uuid"] = it.result.user!!.uid
-                    usermap["deviceId"] = deviceid
-
-                    db.collection("users")
-                        .document(it.result.user!!.uid)
-                        .set(usermap)
-                        .addOnCompleteListener { task2 ->
-                            if (task2.isSuccessful) {
-                                val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-                                val profileUpdates: UserProfileChangeRequest =
-                                    UserProfileChangeRequest.Builder()
-                                        .setDisplayName("" + myname)
-                                        .build()
-                                user!!.updateProfile(profileUpdates)
-                                    .addOnCompleteListener(
-                                        OnCompleteListener { task3 ->
-                                            if (task3.isSuccessful) {
-                                                pd.dismiss()
-                                                if (type == 1) {
-                                                    myEdit.putInt("selector", 1)
-                                                    myEdit.commit()
-                                                    val i = Intent(
-                                                        this@LoginActivity,
-                                                        SelectUserActivity::class.java,
-                                                    )
-                                                    startActivity(i)
-                                                    finishAffinity()
-                                                } else if (type == 2) {
-                                                    myEdit.putInt("selector", 2)
-                                                    myEdit.commit()
-                                                    val i = Intent(
-                                                        this,
-                                                        DrawerActivity2::class.java,
-                                                    )
-                                                    startActivity(i)
-                                                    finishAffinity()
-                                                }
-                                            } else {
-                                                pd.dismiss()
-                                                Toast.makeText(
-                                                    applicationContext,
-                                                    "Failed " + task3.exception,
-                                                    Toast.LENGTH_SHORT,
-                                                ).show()
-                                            }
-                                        },
-                                    )
-                            } else {
-                                pd.dismiss()
-                                Toast.makeText(
-                                    applicationContext,
-                                    "Failed " + task2.exception,
-                                    Toast.LENGTH_SHORT,
-                                )
-                                    .show()
-                            }
-                        }
+        loginViewModel.loginResult.observe(this) { loginResult ->
+            loginResult?.let {
+                progressDialog.dismiss()
+                if (loginResult == "success") {
+                    editSharedPreferencesSelector(this, loginViewModel.type)
+                    val intent = Intent(this@LoginActivity, DrawerActivity::class.java)
+                    startActivity(intent)
+                    finishAffinity()
                 } else {
-                    pd.dismiss()
-                    Toast.makeText(applicationContext, "Failed " + it.exception, Toast.LENGTH_SHORT)
-                        .show()
+                    this.showToast(loginResult)
                 }
-            },
-        )
-    }
+                loginViewModel.loginResult.value = null
+            }
+        }
 
-    fun loginuser() {
-        auth.signInWithEmailAndPassword(
-            email,
-            "Test@123",
-        ).addOnCompleteListener(
-            OnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    pd.dismiss()
-                    if (type == 1) {
-                        myEdit.putInt("selector", 1)
-                        myEdit.commit()
-                        val i = Intent(this@LoginActivity, DrawerActivity::class.java)
-                        startActivity(i)
-                        finishAffinity()
-                    } else if (type == 2) {
-                        myEdit.putInt("selector", 2)
-                        myEdit.commit()
-                        val i = Intent(this@LoginActivity, DrawerActivity2::class.java)
-                        startActivity(i)
-                        finishAffinity()
+        loginViewModel.createUserResult.observe(this) { createUserResult ->
+            createUserResult?.let {
+                if (createUserResult == "success") {
+                    this.showToast("Created")
+                    loginViewModel.saveUserData()
+                } else {
+                    progressDialog.dismiss()
+                    this.showToast(createUserResult)
+                }
+                loginViewModel.createUserResult.value = null
+            }
+        }
+
+        loginViewModel.saveUserResult.observe(this) { saveUserResult ->
+            saveUserResult?.let {
+                progressDialog.dismiss()
+                if (saveUserResult == "success") {
+                    editSharedPreferencesSelector(this, loginViewModel.type)
+                    val intent = if (loginViewModel.type == UserType.DONER) {
+                        Intent(this@LoginActivity, SelectUserActivity::class.java)
+                    } else {
+                        Intent(this, DrawerActivity::class.java)
                     }
+                    startActivity(intent)
+                    finishAffinity()
                 } else {
-                    pd.dismiss()
-                    Toast.makeText(applicationContext, "Failed " + task.exception, Toast.LENGTH_SHORT)
-                        .show()
+                    this.showToast(saveUserResult)
                 }
-            },
-        )
+                loginViewModel.saveUserResult.value = null
+            }
+        }
+
+        if (loginViewModel.type == UserType.DONER) {
+            binding.mytv.text = "Donor"
+        } else if (loginViewModel.type == UserType.RECEIVER) {
+            binding.mytv.text = "Receiver"
+        }
+
+        binding.submitdevice.setOnClickListener {
+            val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+            loginViewModel.deviceId = deviceId
+            val email = "s$deviceId@gmail.com"
+            progressDialog.show()
+            loginViewModel.checkUser(email)
+        }
     }
 }

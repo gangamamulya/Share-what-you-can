@@ -26,7 +26,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:exported="false" />
         <activity android:name=".DashboardActivity" />
         <activity android:name=".DonorActivity" />

@@ -19,17 +19,17 @@
             android:name=".DrawerActivity2"
             android:exported="false" />
         <activity
-            android:name=".donor.DrawerActivity"
+            android:name=".DrawerActivity"
             android:exported="false" />
         <activity
             android:name=".SelectUserActivity"
             android:exported="false" />
 
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".LoginActivity"
             android:exported="false" />
-        <activity android:name=".donor.DashboardActivity" />
-        <activity android:name=".donor.DonorActivity" />
+        <activity android:name=".DashboardActivity" />
+        <activity android:name=".DonorActivity" />
 
         <activity
             android:name=".HomescreenActivity"

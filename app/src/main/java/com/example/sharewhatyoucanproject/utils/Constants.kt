@@ -3,7 +3,6 @@ package com.example.sharewhatyoucanproject.utils
 import android.Manifest
 
 const val PERMISSION_ALL = 1
-const val DEFAULT_PASSWORD = "Test@123"
 
 val locationPermissions = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,

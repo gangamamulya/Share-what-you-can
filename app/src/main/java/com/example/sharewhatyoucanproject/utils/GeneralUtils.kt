@@ -1,6 +1,7 @@
 package com.example.sharewhatyoucanproject.utils
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.widget.Toast
@@ -39,4 +40,13 @@ fun getRandomName(): String {
     val random = (1111 until 9999).random()
     val nameIndex = (0..9).random()
     return nameArray[nameIndex] + random
+}
+
+fun getUserType(intent: Intent): Int {
+    val type = intent.getIntExtra("type", 0)
+    return type
+}
+
+fun generatePassword(email: String): String {
+    return "Test@1${email.substring(2, 9)}"
 }

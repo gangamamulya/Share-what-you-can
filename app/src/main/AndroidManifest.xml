@@ -16,10 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShareWhatYouCanProject">
         <activity
-            android:name=".DrawerActivity2"
+            android:name=".ReceiverDrawerActivity"
             android:exported="false" />
         <activity
-            android:name=".DrawerActivity"
+            android:name=".DonorDrawerActivity"
             android:exported="false" />
         <activity
             android:name=".SelectUserActivity"

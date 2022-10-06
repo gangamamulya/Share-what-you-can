@@ -1,33 +1,38 @@
 package com.example.sharewhatyoucanproject.login
 
+import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.sharewhatyoucanproject.models.UserType
-import com.example.sharewhatyoucanproject.utils.DEFAULT_PASSWORD
+import com.example.sharewhatyoucanproject.utils.editSharedPreferencesSelector
+import com.example.sharewhatyoucanproject.utils.generatePassword
 import com.example.sharewhatyoucanproject.utils.getRandomName
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.collections.HashMap
+import kotlin.collections.MutableMap
+import kotlin.collections.set
 
 class LoginViewModel(
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val app: Application,
+    private var auth: FirebaseAuth,
+    private val db: FirebaseFirestore,
 
 ) : ViewModel() {
 
-    val checkResult = MutableLiveData<String>()
-    val loginResult = MutableLiveData<String>()
-    val createUserResult = MutableLiveData<String>()
-    val saveUserResult = MutableLiveData<String>()
-
+    private val _authenticationResult = MutableLiveData<AuthenticationResult>()
+    val authenticationResult: LiveData<AuthenticationResult> = _authenticationResult
     var type: UserType = UserType.UNKNOWN
     var deviceId: String = ""
     private var userId: String = ""
     private var userEmail: String = ""
 
     fun checkUser(email: String) {
+        generatePassword(email)
         db.collection("users")
             .whereEqualTo("email", email)
             .get()
@@ -40,7 +45,8 @@ class LoginViewModel(
                         loginUser(email)
                     }
                 } else {
-                    checkResult.value = "Failed ${task.exception}"
+                    _authenticationResult.value =
+                        AuthenticationResult.Fail("Failed ${task.exception}")
                 }
             }
     }
@@ -48,14 +54,14 @@ class LoginViewModel(
     private fun signUp(email: String) {
         auth.createUserWithEmailAndPassword(
             email,
-            DEFAULT_PASSWORD,
+            generatePassword(email),
         ).addOnCompleteListener {
             if (it.isSuccessful) {
                 userEmail = email
                 userId = it.result.user?.uid ?: ""
-                createUserResult.value = "success"
+                _authenticationResult.value = AuthenticationResult.SignUpSuccess
             } else {
-                createUserResult.value = "Failed ${it.exception}"
+                _authenticationResult.value = AuthenticationResult.Fail("Failed ${it.exception}")
             }
         }
     }
@@ -74,13 +80,14 @@ class LoginViewModel(
                 if (task.isSuccessful) {
                     updateUser(userName)
                 } else {
-                    saveUserResult.value = "Failed ${task.exception}"
+                    _authenticationResult.value =
+                        AuthenticationResult.Fail("Failed ${task.exception}")
                 }
             }
     }
 
     private fun updateUser(userName: String) {
-        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val user: FirebaseUser? = auth.currentUser
         val profileUpdates: UserProfileChangeRequest =
             UserProfileChangeRequest.Builder()
                 .setDisplayName("" + userName)
@@ -88,31 +95,43 @@ class LoginViewModel(
         user?.updateProfile(profileUpdates)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    saveUserResult.value = "success"
+                    editSharedPreferencesSelector(app, type)
+                    _authenticationResult.value = AuthenticationResult.SaveDataSuccess
                 } else {
-                    saveUserResult.value = "Failed ${task.exception}"
+                    _authenticationResult.value =
+                        AuthenticationResult.Fail("Failed ${task.exception}")
                 }
             }
     }
 
     private fun loginUser(email: String) {
-        auth.signInWithEmailAndPassword(email, DEFAULT_PASSWORD).addOnCompleteListener { task ->
+        auth.signInWithEmailAndPassword(email, generatePassword(email)).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                if (type == UserType.DONER || type == UserType.RECEIVER) {
-                    loginResult.value = "success"
+                if (type == UserType.DONOR || type == UserType.RECEIVER) {
+                    editSharedPreferencesSelector(app, type)
+                    _authenticationResult.value = AuthenticationResult.LoginSuccess
                 }
             } else {
-                loginResult.value = "Failed ${task.exception}"
+                _authenticationResult.value =
+                    AuthenticationResult.Fail("Failed ${task.exception}")
             }
         }
     }
 }
 
 class LoginViewModelFactory(
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val app: Application,
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LoginViewModel(auth, db) as T
+        return LoginViewModel(app, auth, db) as T
     }
+}
+
+sealed class AuthenticationResult {
+    data class Fail(val message: String) : AuthenticationResult()
+    object LoginSuccess : AuthenticationResult()
+    object SignUpSuccess : AuthenticationResult()
+    object SaveDataSuccess : AuthenticationResult()
 }

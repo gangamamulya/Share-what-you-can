@@ -53,14 +53,13 @@ class DonorActivity : AppCompatActivity() {
 
         donorViewModel.donorResult.observe(this) { donorResult ->
             when (donorResult) {
-                is DonorResult.showMessage -> {
-                    if (donorResult.message == "Success") {
-                        applicationContext.showToast("Post Added")
-                        finish()
-                    } else {
-                        circularProgressIndicator.visibility = View.GONE
-                        applicationContext.showToast(donorResult.message)
-                    }
+                is DonorResult.Success -> {
+                    applicationContext.showToast("Post Added")
+                    finish()
+                }
+                is DonorResult.Error -> {
+                    circularProgressIndicator.visibility = View.GONE
+                    applicationContext.showToast(donorResult.message)
                 }
             }
         }

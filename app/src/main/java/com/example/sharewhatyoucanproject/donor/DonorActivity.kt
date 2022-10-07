@@ -17,35 +17,27 @@ import com.example.sharewhatyoucanproject.utils.isGPSEnabled
 import com.example.sharewhatyoucanproject.utils.locationPermissions
 import com.example.sharewhatyoucanproject.utils.showToast
 import com.google.android.gms.location.LocationRequest
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
+import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class DonorActivity : AppCompatActivity() {
 
     lateinit var donorViewModel: DonorViewModel
     private lateinit var binding: ActivityDonorBinding
-    lateinit var db: FirebaseFirestore
-    lateinit var storage: FirebaseStorage
-    lateinit var storageReference: StorageReference
     lateinit var locationRequest: LocationRequest
     lateinit var arrayAdapter: ArrayAdapter<String>
-    lateinit var circularProgressIndicator: com.google.android.material.progressindicator.CircularProgressIndicator
+
+    lateinit var circularProgressIndicator: CircularProgressIndicator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDonorBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        circularProgressIndicator = findViewById(R.id.progress_circular)
+        circularProgressIndicator = binding.progressCircular
         locationRequest = LocationRequest.create()
         supportActionBar?.hide()
-        storage = FirebaseStorage.getInstance()
-        storageReference = storage.reference
-        db = FirebaseFirestore.getInstance()
-
         donorViewModel = ViewModelProvider(
             this,
-            DonorViewModelFactory(applicationContext, db, storageReference),
+            DonorViewModelFactory(applicationContext),
         )[DonorViewModel::class.java]
 
         donorViewModel.currentLocation.observe(this) {

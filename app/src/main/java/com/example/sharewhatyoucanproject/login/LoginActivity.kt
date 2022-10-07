@@ -14,31 +14,24 @@ import com.example.sharewhatyoucanproject.databinding.ActivityLoginBinding
 import com.example.sharewhatyoucanproject.models.UserType
 import com.example.sharewhatyoucanproject.utils.getUserType
 import com.example.sharewhatyoucanproject.utils.showToast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     lateinit var loginViewModel: LoginViewModel
-    lateinit var auth: FirebaseAuth
-    lateinit var db: FirebaseFirestore
-    lateinit var circularProgressIndicator: com.google.android.material.progressindicator.CircularProgressIndicator
+    lateinit var circularProgressIndicator: CircularProgressIndicator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         circularProgressIndicator = findViewById(R.id.progress_circular)
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
         supportActionBar?.hide()
         loginViewModel = ViewModelProvider(
             this,
-            LoginViewModelFactory(this.application, auth, db),
+            LoginViewModelFactory(this.application),
         )[LoginViewModel::class.java]
-
-        val type = getUserType(intent)
-        val typevar1 = UserType.values()[type]
+        val typevar1 = getUserType(intent)
 
         loginViewModel.type = typevar1
 
@@ -46,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
             when (result) {
                 is AuthenticationResult.Fail -> {
                     circularProgressIndicator.visibility = GONE
-                    this.showToast(result.message)
+                    showToast(result.message)
                 }
                 is AuthenticationResult.LoginSuccess -> {
                     circularProgressIndicator.visibility = GONE
@@ -55,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
                     finishAffinity()
                 }
                 is AuthenticationResult.SignUpSuccess -> {
-                    this.showToast("Created")
+                    showToast("Created")
                 }
 
                 is AuthenticationResult.SaveDataSuccess -> {
@@ -79,9 +72,8 @@ class LoginActivity : AppCompatActivity() {
         binding.submitdevice.setOnClickListener {
             val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
             loginViewModel.deviceId = deviceId
-            val email = "s$deviceId@gmail.com"
             circularProgressIndicator.visibility = VISIBLE
-            loginViewModel.checkUser(email)
+            loginViewModel.checkUser(deviceId)
         }
     }
 }

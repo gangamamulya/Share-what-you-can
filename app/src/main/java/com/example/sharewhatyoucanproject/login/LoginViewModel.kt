@@ -22,7 +22,7 @@ class LoginViewModel(
     private var auth: FirebaseAuth,
     private val db: FirebaseFirestore,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     private val _authenticationResult = MutableLiveData<AuthenticationResult>()
     val authenticationResult: LiveData<AuthenticationResult> = _authenticationResult
@@ -31,7 +31,9 @@ class LoginViewModel(
     private var userId: String = ""
     private var userEmail: String = ""
 
-    fun checkUser(email: String) {
+
+    fun checkUser(deviceId: String) {
+        val email = "s$deviceId@gmail.com"
         generatePassword(email)
         db.collection("users")
             .whereEqualTo("email", email)
@@ -105,24 +107,25 @@ class LoginViewModel(
     }
 
     private fun loginUser(email: String) {
-        auth.signInWithEmailAndPassword(email, generatePassword(email)).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                if (type == UserType.DONOR || type == UserType.RECEIVER) {
-                    editSharedPreferencesSelector(app, type)
-                    _authenticationResult.value = AuthenticationResult.LoginSuccess
+        auth.signInWithEmailAndPassword(email, generatePassword(email))
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    if (type == UserType.DONOR || type == UserType.RECEIVER) {
+                        editSharedPreferencesSelector(app, type)
+                        _authenticationResult.value = AuthenticationResult.LoginSuccess
+                    }
+                } else {
+                    _authenticationResult.value =
+                        AuthenticationResult.Fail("Failed ${task.exception}")
                 }
-            } else {
-                _authenticationResult.value =
-                    AuthenticationResult.Fail("Failed ${task.exception}")
             }
-        }
     }
 }
 
 class LoginViewModelFactory(
     private val app: Application,
-    private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore,
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
+     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return LoginViewModel(app, auth, db) as T

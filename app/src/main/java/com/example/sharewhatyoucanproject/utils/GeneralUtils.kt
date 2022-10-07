@@ -7,6 +7,7 @@ import android.location.LocationManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.sharewhatyoucanproject.models.UserType
 
 fun Context.showToast(message: String) {
     Toast.makeText(
@@ -42,9 +43,9 @@ fun getRandomName(): String {
     return nameArray[nameIndex] + random
 }
 
-fun getUserType(intent: Intent): Int {
+fun getUserType(intent: Intent): UserType {
     val type = intent.getIntExtra("type", 0)
-    return type
+    return UserType.values()[type]
 }
 
 fun generatePassword(email: String): String {

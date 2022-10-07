@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import java.util.*
@@ -117,8 +118,8 @@ class DonorViewModel(
 
 class DonorViewModelFactory(
     private val mContext: Context,
-    private val db: FirebaseFirestore,
-    private val storageReference: StorageReference,
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val storageReference: StorageReference = FirebaseStorage.getInstance().reference,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return DonorViewModel(mContext, db, storageReference) as T

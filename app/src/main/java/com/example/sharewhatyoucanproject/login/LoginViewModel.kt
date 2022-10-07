@@ -31,7 +31,6 @@ class LoginViewModel(
     private var userId: String = ""
     private var userEmail: String = ""
 
-
     fun checkUser(deviceId: String) {
         val email = "s$deviceId@gmail.com"
         generatePassword(email)
@@ -125,7 +124,7 @@ class LoginViewModel(
 class LoginViewModelFactory(
     private val app: Application,
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
-     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return LoginViewModel(app, auth, db) as T

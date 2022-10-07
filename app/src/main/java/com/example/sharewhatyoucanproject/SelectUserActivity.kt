@@ -47,7 +47,8 @@ class SelectUserActivity : AppCompatActivity() {
                     startActivity(i)
                     finish()
                 } else {
-                    Toast.makeText(applicationContext, "Failed to update", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Failed to update", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
     }

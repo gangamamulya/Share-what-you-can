@@ -72,9 +72,9 @@ class DonorViewModel(
             ?.add(postMap)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _donorResult.value = DonorResult.showMessage("Success")
+                    _donorResult.value = DonorResult.Success
                 } else {
-                    _donorResult.value = DonorResult.showMessage("Failed ${task.exception}")
+                    _donorResult.value = DonorResult.Error("Failed ${task.exception}")
                 }
             }
     }
@@ -122,5 +122,6 @@ class DonorViewModelFactory(
 }
 
 sealed class DonorResult {
-    data class showMessage(val message: String) : DonorResult()
+    object Success : DonorResult()
+    data class Error(val message: String) : DonorResult()
 }

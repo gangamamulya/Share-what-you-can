@@ -1,6 +1,8 @@
 package com.example.sharewhatyoucanproject
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
@@ -37,7 +39,7 @@ class DonorActivity : AppCompatActivity() {
         supportActionBar?.hide()
         donorViewModel = ViewModelProvider(
             this,
-            DonorViewModelFactory(applicationContext),
+            DonorViewModelFactory(application),
         )[DonorViewModel::class.java]
 
         donorViewModel.currentLocation.observe(this) {
@@ -48,14 +50,17 @@ class DonorActivity : AppCompatActivity() {
         donorViewModel.imageUrl.observe(this) {
             it?.let { donorViewModel.saveData() }
         }
-        donorViewModel.saveData.observe(this) {
-            it?.let {
-                if (it == "success") {
-                    applicationContext.showToast("Post Added")
-                    finish()
-                } else {
-                    circularProgressIndicator.visibility = View.GONE
-                    applicationContext.showToast(it)
+
+        donorViewModel.donorResult.observe(this) { donorResult ->
+            when (donorResult) {
+                is DonorResult.showMessage -> {
+                    if (donorResult.message == "Success") {
+                        applicationContext.showToast("Post Added")
+                        finish()
+                    } else {
+                        circularProgressIndicator.visibility = View.GONE
+                        applicationContext.showToast(donorResult.message)
+                    }
                 }
             }
         }
@@ -126,6 +131,16 @@ class DonorActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling ActivityCompat#requestPermissions
+            }
             donorViewModel.getCurrentLocation()
         }
     }

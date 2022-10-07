@@ -43,7 +43,7 @@ class SelectUserActivity : AppCompatActivity() {
             .update("type", type)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val i = Intent(this, DrawerActivity::class.java)
+                    val i = Intent(this, DonorDrawerActivity::class.java)
                     startActivity(i)
                     finish()
                 } else {

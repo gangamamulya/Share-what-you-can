@@ -16,17 +16,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShareWhatYouCanProject">
         <activity
-            android:name=".DrawerActivity2"
+            android:name=".ReceiverDrawerActivity"
             android:exported="false" />
         <activity
-            android:name=".DrawerActivity"
+            android:name=".DonorDrawerActivity"
             android:exported="false" />
         <activity
             android:name=".SelectUserActivity"
             android:exported="false" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:exported="false" />
         <activity android:name=".DashboardActivity" />
         <activity android:name=".DonorActivity" />

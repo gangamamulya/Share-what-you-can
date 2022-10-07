@@ -11,7 +11,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FieldValue
@@ -20,7 +19,8 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import java.util.*
+import java.util.UUID
+import kotlin.collections.HashMap
 
 class DonorViewModel(
     application: Application,
@@ -109,7 +109,6 @@ class DonorViewModel(
             }
     }
 }
-
 
 class DonorViewModelFactory(
     private val application: Application,

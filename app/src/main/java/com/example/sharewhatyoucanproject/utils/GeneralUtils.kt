@@ -27,8 +27,8 @@ fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
     if (context != null) {
         for (permission in permissions) {
             if (permission?.let {
-                ActivityCompat.checkSelfPermission(context, it)
-            } != PackageManager.PERMISSION_GRANTED
+                    ActivityCompat.checkSelfPermission(context, it)
+                } != PackageManager.PERMISSION_GRANTED
             ) {
                 return false
             }

@@ -21,6 +21,16 @@ class LoginActivity : AppCompatActivity() {
     lateinit var loginViewModel: LoginViewModel
     lateinit var circularProgressIndicator: CircularProgressIndicator
 
+    companion object {
+        const val ARG_USER_TYPE = "type"
+        fun navigate(activity: AppCompatActivity, userType: Int) {
+            val intent = Intent(activity, LoginActivity::class.java).apply {
+                putExtra(ARG_USER_TYPE, userType)
+            }
+            activity.startActivity(intent)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -49,6 +59,8 @@ class LoginActivity : AppCompatActivity() {
                 }
                 is AuthenticationResult.SignUpSuccess -> {
                     showToast("Created")
+
+
                 }
 
                 is AuthenticationResult.SaveDataSuccess -> {

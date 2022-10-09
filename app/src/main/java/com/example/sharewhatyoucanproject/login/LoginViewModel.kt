@@ -61,6 +61,7 @@ class LoginViewModel(
                 userEmail = email
                 userId = it.result.user?.uid ?: ""
                 _authenticationResult.value = AuthenticationResult.SignUpSuccess
+                saveUserData()
             } else {
                 _authenticationResult.value = AuthenticationResult.Fail("Failed ${it.exception}")
             }

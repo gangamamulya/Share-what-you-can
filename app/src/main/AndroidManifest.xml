@@ -29,6 +29,9 @@
             android:exported="false" />
         <activity
             android:name=".SelectUserActivity"
+            android:exported="false" />RequestActivity
+        <activity
+            android:name=".RequestActivity"
             android:exported="false" />
         <activity
             android:name=".login.LoginActivity"

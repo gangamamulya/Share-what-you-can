@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Doner"
+        android:text="Donor"
         android:textSize="20dp"
         android:id="@+id/mytv"
         android:textColor="#696969"

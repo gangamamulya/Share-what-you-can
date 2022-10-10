@@ -1,18 +1,12 @@
 package com.example.sharewhatyoucanproject
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Application
-import android.location.Location
 import android.net.Uri
-import androidx.annotation.RequiresPermission
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
@@ -23,11 +17,10 @@ import java.util.UUID
 import kotlin.collections.HashMap
 
 class DonorViewModel(
-    application: Application,
     private val db: FirebaseFirestore,
     private val storageReference: StorageReference,
 
-    ) : AndroidViewModel(application) {
+    ) : ViewModel() {
     private lateinit var uploadTask: UploadTask
     private var locationRequest: LocationRequest = LocationRequest.create()
 
@@ -97,26 +90,18 @@ class DonorViewModel(
         }
     }
 
-    @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
-    fun getCurrentLocation() {
-        LocationServices.getFusedLocationProviderClient(getApplication()).lastLocation
-            .addOnSuccessListener { location: Location? ->
-                if (location != null) {
-                    val latitude = location.latitude
-                    val longitude = location.longitude
-                    _currentLocation.value = GeoPoint(latitude, longitude)
-                }
-            }
+    fun setCurrentLocation(geoPoint: GeoPoint) {
+        _currentLocation.value = geoPoint
     }
+
 }
 
 class DonorViewModelFactory(
-    private val application: Application,
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
     private val storageReference: StorageReference = FirebaseStorage.getInstance().reference,
-) : ViewModelProvider.AndroidViewModelFactory(application) {
+) : ViewModelProvider.Factory  {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return DonorViewModel(application, db, storageReference) as T
+        return DonorViewModel(db, storageReference) as T
     }
 }
 

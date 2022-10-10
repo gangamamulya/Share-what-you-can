@@ -3,11 +3,13 @@ package com.example.sharewhatyoucanproject
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +21,9 @@ import com.example.sharewhatyoucanproject.utils.isGPSEnabled
 import com.example.sharewhatyoucanproject.utils.locationPermissions
 import com.example.sharewhatyoucanproject.utils.showToast
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.firebase.firestore.GeoPoint
 
 class DonorActivity : AppCompatActivity() {
 
@@ -27,7 +31,6 @@ class DonorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDonorBinding
     lateinit var locationRequest: LocationRequest
     lateinit var arrayAdapter: ArrayAdapter<String>
-
     lateinit var circularProgressIndicator: CircularProgressIndicator
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +42,7 @@ class DonorActivity : AppCompatActivity() {
         supportActionBar?.hide()
         donorViewModel = ViewModelProvider(
             this,
-            DonorViewModelFactory(application),
+            DonorViewModelFactory(),
         )[DonorViewModel::class.java]
 
         donorViewModel.currentLocation.observe(this) {
@@ -140,8 +143,20 @@ class DonorActivity : AppCompatActivity() {
             ) {
                 // TODO: Consider calling ActivityCompat#requestPermissions
             }
-            donorViewModel.getCurrentLocation()
+            getCurrentLocation()
         }
+    }
+
+    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    fun getCurrentLocation() {
+        LocationServices.getFusedLocationProviderClient(this).lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    donorViewModel.setCurrentLocation(GeoPoint(latitude, longitude))
+                }
+            }
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

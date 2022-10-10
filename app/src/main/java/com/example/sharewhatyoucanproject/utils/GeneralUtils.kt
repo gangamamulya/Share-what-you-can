@@ -1,12 +1,16 @@
 package com.example.sharewhatyoucanproject.utils
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.os.Build
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.sharewhatyoucanproject.models.UserType
 
 fun Context.showToast(message: String) {
@@ -51,3 +55,5 @@ fun getUserType(intent: Intent): UserType {
 fun generatePassword(email: String): String {
     return "Test@1${email.substring(2, 9)}"
 }
+
+

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -24,6 +23,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.firestore.GeoPoint
+import coil.load
 
 class DonorActivity : AppCompatActivity() {
 
@@ -165,8 +165,7 @@ class DonorActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     donorViewModel.filepath = data.data
-                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, data.data)
-                    binding.foodimg.setImageBitmap(bitmap)
+                    binding.foodimg.load(data.data)
                 }
             } else if (resultCode == RESULT_CANCELED) {
                 applicationContext.showToast("Canceled")

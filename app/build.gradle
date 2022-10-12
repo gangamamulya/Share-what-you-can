@@ -10,7 +10,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 
 
-
 android {
   compileSdk 33
 
@@ -58,9 +57,10 @@ dependencies {
   implementation 'com.google.firebase:firebase-analytics'
   implementation 'com.google.firebase:firebase-database'
 
+  //coil
+  implementation("io.coil-kt:coil:2.2.2")
+
   //firebase storage lines
-
-
   implementation 'com.google.firebase:firebase-storage:9.2.1'
   implementation 'com.google.firebase:firebase-auth:9.2.1'
   implementation 'com.firebase:firebase-client-android:2.4.0'
@@ -111,6 +111,11 @@ dependencies {
   implementation 'com.google.firebase:firebase-crashlytics-ktx'
   implementation 'com.google.firebase:firebase-analytics-ktx'
 
+
+//Singleton artifact
+  implementation "io.coil-kt:coil:0.9.5"
+//Base artifact without singleton
+  implementation "io.coil-kt:coil-base:0.9.5"
 
 }
 

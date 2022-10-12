@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -13,6 +12,7 @@ import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import coil.load
 import com.example.sharewhatyoucanproject.databinding.ActivityDonorBinding
 import com.example.sharewhatyoucanproject.utils.PERMISSION_ALL
 import com.example.sharewhatyoucanproject.utils.foodTypes
@@ -165,8 +165,7 @@ class DonorActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     donorViewModel.filepath = data.data
-                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, data.data)
-                    binding.foodimg.setImageBitmap(bitmap)
+                    binding.foodimg.load(data.data)
                 }
             } else if (resultCode == RESULT_CANCELED) {
                 applicationContext.showToast("Canceled")

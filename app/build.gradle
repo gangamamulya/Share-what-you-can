@@ -58,9 +58,10 @@ dependencies {
   implementation 'com.google.firebase:firebase-analytics'
   implementation 'com.google.firebase:firebase-database'
 
+  //coil
+  implementation("io.coil-kt:coil:2.2.2")
+
   //firebase storage lines
-
-
   implementation 'com.google.firebase:firebase-storage:9.2.1'
   implementation 'com.google.firebase:firebase-auth:9.2.1'
   implementation 'com.firebase:firebase-client-android:2.4.0'

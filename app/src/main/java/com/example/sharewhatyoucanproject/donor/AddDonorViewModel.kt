@@ -16,7 +16,7 @@ import com.google.firebase.storage.UploadTask
 import java.util.UUID
 import kotlin.collections.HashMap
 
-class DonorViewModel(
+class AddDonorViewModel(
     private val db: FirebaseFirestore,
     private val storageReference: StorageReference,
 
@@ -96,12 +96,12 @@ class DonorViewModel(
 
 }
 
-class DonorViewModelFactory(
+class AddDonorViewModelFactory(
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
     private val storageReference: StorageReference = FirebaseStorage.getInstance().reference,
 ) : ViewModelProvider.Factory  {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return DonorViewModel(db, storageReference) as T
+        return AddDonorViewModel(db, storageReference) as T
     }
 }
 

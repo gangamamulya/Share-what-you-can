@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,30 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShareWhatYouCanProject">
         <activity
-            android:name=".UserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".donor.PostsActivity"
-            android:exported="false" />
-        <activity
             android:name=".ReceiverDrawerActivity"
             android:exported="false" />
+
         <activity
-            android:name=".DonorDrawerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SelectUserActivity"
-            android:exported="false" />RequestActivity
-        <activity
-            android:name=".RequestActivity"
-            android:exported="false" />
-        <activity
-            android:name=".login.LoginActivity"
-            android:exported="false" />
-        <activity android:name=".DashboardActivity" />
-        <activity android:name=".DonorActivity" />
-        <activity
-            android:name=".HomescreenActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ShareWhatYouCanProject.NoActionBar">

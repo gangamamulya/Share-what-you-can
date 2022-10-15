@@ -123,12 +123,12 @@ class LoginViewModel(
 }
 
 class LoginViewModelFactory(
-    private val app: Application,
+    private val app: Application?,
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LoginViewModel(app, auth, db) as T
+        return app?.let { LoginViewModel(it, auth, db) } as T
     }
 }
 

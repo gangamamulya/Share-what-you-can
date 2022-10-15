@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--suppress ALL -->
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".donor.AddDonorFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -124,5 +132,5 @@
         android:indeterminate="true"
         android:paddingTop="10dp"
         app:indicatorColor="@color/red"/>
-
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -5,35 +5,35 @@
 
     <group>
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/home_fragment"
             android:icon="@drawable/home_icon"
             android:title="@string/menu_home" />
 
 
         <item
-            android:id="@+id/posts_item"
+            android:id="@+id/posts_fragment"
             android:icon="@drawable/ic_baseline_history_24"
-            android:title="Your Listings" />
+            android:title="@string/your_listings" />
 
         <item
-            android:id="@+id/request_item"
+            android:id="@+id/request_fragment"
             android:icon="@drawable/ic_baseline_supervised_user_circle_24"
-            android:title="Requests" />
+            android:title="@string/requests" />
 
         <item
-            android:id="@+id/user_item"
+            android:id="@+id/user_fragment"
             android:icon="@drawable/ic_baseline_chat_24"
-            android:title="Chat" />
+            android:title="@string/chat" />
 
         <item
-            android:id="@+id/review_item"
+            android:id="@+id/review_fragment"
             android:icon="@drawable/ic_baseline_reviews_24"
-            android:title="Reviews" />
+            android:title="@string/reviews" />
 
         <item
-            android:id="@+id/logout_item"
+            android:id="@+id/on_boarding_fragment"
             android:icon="@drawable/ic_baseline_logout_24"
-            android:title="Log out" />
+            android:title="@string/log_out" />
 
     </group>
 

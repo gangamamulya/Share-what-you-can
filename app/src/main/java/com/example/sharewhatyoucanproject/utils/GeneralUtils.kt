@@ -1,17 +1,19 @@
 package com.example.sharewhatyoucanproject.utils
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.Manifest
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
-import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
+import com.example.sharewhatyoucanproject.auth.login.LoginFragmentArgs
 import com.example.sharewhatyoucanproject.models.UserType
+import com.google.android.gms.location.LocationServices
+import com.google.firebase.firestore.GeoPoint
 
 fun Context.showToast(message: String) {
     Toast.makeText(
@@ -31,8 +33,8 @@ fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
     if (context != null) {
         for (permission in permissions) {
             if (permission?.let {
-                    ActivityCompat.checkSelfPermission(context, it)
-                } != PackageManager.PERMISSION_GRANTED
+                ActivityCompat.checkSelfPermission(context, it)
+            } != PackageManager.PERMISSION_GRANTED
             ) {
                 return false
             }
@@ -47,13 +49,22 @@ fun getRandomName(): String {
     return nameArray[nameIndex] + random
 }
 
-fun getUserType(intent: Intent): UserType {
-    val type = intent.getIntExtra("type", 0)
-    return UserType.values()[type]
+fun getUserType(args: LoginFragmentArgs): UserType {
+    return UserType.values()[args.type]
+}
+
+@RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+fun getCurrentLocation(activity: Activity, onGetLocation: (GeoPoint) -> Unit) {
+    LocationServices.getFusedLocationProviderClient(activity).lastLocation
+        .addOnSuccessListener { location: Location? ->
+            if (location != null) {
+                val latitude = location.latitude
+                val longitude = location.longitude
+                onGetLocation(GeoPoint(latitude, longitude))
+            }
+        }
 }
 
 fun generatePassword(email: String): String {
     return "Test@1${email.substring(2, 9)}"
 }
-
-

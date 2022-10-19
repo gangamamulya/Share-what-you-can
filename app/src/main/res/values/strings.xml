@@ -105,5 +105,10 @@
     <string name="previous">Previous</string>
     <string name="menu_home">My Home</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="your_listings">Your Listings</string>
+    <string name="requests">Requests</string>
+    <string name="chat">Chat</string>
+    <string name="reviews">Reviews</string>
+    <string name="log_out">Log out</string>
 
 </resources>

@@ -1,12 +1,9 @@
-package com.example.sharewhatyoucanproject.login
+package com.example.sharewhatyoucanproject.auth.login
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.sharewhatyoucanproject.models.UserType
-import com.example.sharewhatyoucanproject.utils.editSharedPreferencesSelector
 import com.example.sharewhatyoucanproject.utils.generatePassword
 import com.example.sharewhatyoucanproject.utils.getRandomName
 import com.google.firebase.auth.FirebaseAuth
@@ -17,15 +14,17 @@ import kotlin.collections.HashMap
 import kotlin.collections.MutableMap
 import kotlin.collections.set
 
-class LoginViewModel(
-    private val app: Application,
-    private var auth: FirebaseAuth,
-    private val db: FirebaseFirestore,
+class LoginViewModel() : ViewModel() {
 
-    ) : ViewModel() {
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _authenticationResult = MutableLiveData<AuthenticationResult>()
     val authenticationResult: LiveData<AuthenticationResult> = _authenticationResult
+
+    private val _selectorResult = MutableLiveData<UserType>()
+    val selectorResult: LiveData<UserType> = _selectorResult
+
     var type: UserType = UserType.UNKNOWN
     var deviceId: String = ""
     private var userId: String = ""
@@ -97,7 +96,7 @@ class LoginViewModel(
         user?.updateProfile(profileUpdates)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    editSharedPreferencesSelector(app, type)
+                    _selectorResult.value = type
                     _authenticationResult.value = AuthenticationResult.SaveDataSuccess
                 } else {
                     _authenticationResult.value =
@@ -111,7 +110,7 @@ class LoginViewModel(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (type == UserType.DONOR || type == UserType.RECEIVER) {
-                        editSharedPreferencesSelector(app, type)
+                        _selectorResult.value = type
                         _authenticationResult.value = AuthenticationResult.LoginSuccess
                     }
                 } else {
@@ -119,16 +118,6 @@ class LoginViewModel(
                         AuthenticationResult.Fail("Failed ${task.exception}")
                 }
             }
-    }
-}
-
-class LoginViewModelFactory(
-    private val app: Application,
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LoginViewModel(app, auth, db) as T
     }
 }
 

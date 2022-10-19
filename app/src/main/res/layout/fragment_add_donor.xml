@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?><!--suppress ALL -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".donor.AddDonorFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/foodimg"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/upload"
+            tools:ignore="MissingClass" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click above to upload photo"
+            android:textColor="#696969" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Enter Food Name"
+            android:textColorHint="#696969"
+            app:boxStrokeColor="#FA2E2E"
+            app:hintTextColor="#696969">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/titleet"
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:inputType="textEmailAddress"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Enter Description"
+            android:textColorHint="#696969"
+
+            app:boxStrokeColor="#FA2E2E"
+            app:hintTextColor="#696969">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/descet"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:gravity="start"
+                android:inputType="textEmailAddress"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Cooked Hours Before"
+            android:textColorHint="#696969"
+            app:boxStrokeColor="#FA2E2E"
+            app:hintTextColor="#696969">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/hourset"
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:inputType="number"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/uploadbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/curvebtn"
+            android:text="Upload"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+
+    </LinearLayout>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:paddingTop="10dp"
+        android:visibility="gone"
+        app:indicatorColor="@color/red" />
+</FrameLayout>

@@ -3,15 +3,13 @@ plugins {
   id 'kotlin-android'
   id 'com.google.gms.google-services'
   id 'com.google.firebase.crashlytics'
-  id 'kotlin-kapt'
-  id 'kotlin-android-extensions'
   id 'androidx.navigation.safeargs.kotlin'
+
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
-
 
 
 android {
@@ -118,7 +116,6 @@ dependencies {
   //navigation
   implementation "androidx.navigation:navigation-fragment-ktx:2.5.2"
   implementation "androidx.navigation:navigation-ui-ktx:2.5.2"
-  implementation "androidx.navigation:navigation-dynamic-features-fragment:2.5.2"
 }
 
 //firebase storage

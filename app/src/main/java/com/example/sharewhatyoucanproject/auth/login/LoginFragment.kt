@@ -1,4 +1,4 @@
-package com.example.sharewhatyoucanproject.login
+package com.example.sharewhatyoucanproject.auth.login
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -15,6 +15,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.sharewhatyoucanproject.databinding.FragmentLoginBinding
 import com.example.sharewhatyoucanproject.models.UserType
+import com.example.sharewhatyoucanproject.utils.editSharedPreferencesSelector
+import com.example.sharewhatyoucanproject.utils.getUserType
 import com.example.sharewhatyoucanproject.utils.showToast
 
 class LoginFragment : Fragment() {
@@ -26,31 +28,28 @@ class LoginFragment : Fragment() {
 
     private val args: LoginFragmentArgs by navArgs()
 
-
-
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        loginViewModel = ViewModelProvider(
-            this,
-            LoginViewModelFactory(activity?.application),
-        )[LoginViewModel::class.java]
-     }
+        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+    }
 
     @SuppressLint("HardwareIds")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
 
-        loginViewModel.type = UserType.values()[args.type]
+        loginViewModel.type = getUserType(args)
 
+        loginViewModel.selectorResult.observe(viewLifecycleOwner) { type ->
+            type?.let {
+                editSharedPreferencesSelector(requireContext(), type)
+            }
+        }
         loginViewModel.authenticationResult.observe(requireActivity()) { result ->
             when (result) {
                 is AuthenticationResult.Fail -> {
@@ -64,8 +63,6 @@ class LoginFragment : Fragment() {
                 }
                 is AuthenticationResult.SignUpSuccess -> {
                     requireContext().showToast("Created")
-
-
                 }
 
                 is AuthenticationResult.SaveDataSuccess -> {
@@ -86,11 +83,19 @@ class LoginFragment : Fragment() {
         }
 
         binding.submitdevice.setOnClickListener {
-            val deviceId = Settings.Secure.getString(requireActivity().contentResolver, Settings.Secure.ANDROID_ID)
+            val deviceId = Settings.Secure.getString(
+                requireActivity().contentResolver,
+                Settings.Secure.ANDROID_ID,
+            )
             loginViewModel.deviceId = deviceId
             binding.progressCircular.visibility = VISIBLE
             loginViewModel.checkUser(deviceId)
         }
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

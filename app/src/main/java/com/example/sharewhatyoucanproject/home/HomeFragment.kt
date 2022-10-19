@@ -24,7 +24,6 @@ class HomeFragment : Fragment() {
             val action = HomeFragmentDirections.actionHomeFragmentToOnBoardingFragment()
             findNavController().navigate(action)
         }
-
     }
 
     override fun onCreateView(
@@ -34,7 +33,7 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        (activity as AppCompatActivity).supportActionBar!!.show()
+        (activity as AppCompatActivity).supportActionBar?.show()
 
         binding.nameofuser.text = homeViewModel.getUserName()
         binding.uploadlayout.setOnClickListener {
@@ -42,5 +41,10 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

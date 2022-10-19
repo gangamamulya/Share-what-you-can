@@ -2,8 +2,6 @@ package com.example.sharewhatyoucanproject
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -19,8 +17,7 @@ import com.example.sharewhatyoucanproject.utils.createNotificationChannel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
-
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -47,7 +44,10 @@ class MainActivity : AppCompatActivity(){
         navView.setupWithNavController(navController)
         val headerView = navView.getHeaderView(0)
         val headerBinding: NavHeaderDrawerBinding = NavHeaderDrawerBinding.bind(headerView)
-        headerBinding.donertv.text = mainViewModel.getUserName()
+
+        mainViewModel.username.observe(this) { username ->
+            headerBinding.donertv.text = username
+        }
         createNotificationChannel(this, mainViewModel.getUserId())
     }
 

@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_review" />
     <fragment
         android:id="@+id/on_boarding_fragment"
-        android:name="com.example.sharewhatyoucanproject.login.OnBoardingFragment"
+        android:name="com.example.sharewhatyoucanproject.auth.onboarding.OnBoardingFragment"
         android:label="fragment_on_boarding"
         tools:layout="@layout/fragment_on_boarding">
         <action
@@ -55,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/login_fragment"
-        android:name="com.example.sharewhatyoucanproject.login.LoginFragment"
+        android:name="com.example.sharewhatyoucanproject.auth.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
         <action
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/select_user_fragment"
-        android:name="com.example.sharewhatyoucanproject.login.SelectUserFragment"
+        android:name="com.example.sharewhatyoucanproject.auth.SelectUser.SelectUserFragment"
         android:label="fragment_select_user"
         tools:layout="@layout/fragment_select_user">
         <action

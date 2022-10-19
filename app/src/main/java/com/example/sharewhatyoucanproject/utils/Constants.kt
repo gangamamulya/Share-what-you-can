@@ -4,6 +4,9 @@ import android.Manifest
 
 const val PERMISSION_ALL = 1
 
+const val NOTIFICATION_CHANNEL_ID = "requests_id"
+const val NOTIFICATION_CHANNEL_NAME = "FoodRequests"
+
 val locationPermissions = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.ACCESS_COARSE_LOCATION,

@@ -61,9 +61,4 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    object DonorConstants {
-        const val CHANNEL_1_ID = "myCh"
-        const val CHANNEL_2_ID = "Channel1"
-        const val empty_string = ""
-    }
 }

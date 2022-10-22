@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".dashboard.DashboardFragment">
+    tools:context=".rdashboard.rposts.RPostFragment">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,12 +17,12 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/foodlist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="10dp"
-        android:nestedScrollingEnabled="false"
-        tools:targetApi="lollipop" />
+        android:layout_height="match_parent"
+        tools:itemCount="3"
+        tools:listitem="@layout/postitem"/>
+
 
 
     <com.google.android.material.progressindicator.CircularProgressIndicator

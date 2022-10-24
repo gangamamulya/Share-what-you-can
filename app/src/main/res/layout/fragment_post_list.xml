@@ -6,14 +6,15 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".rdashboard.rposts.RPostFragment">
+    tools:context=".rdashboard.rposts.PostListFragment">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post's"
         android:textColor="@color/black"
         android:textSize="20dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -21,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:itemCount="3"
-        tools:listitem="@layout/postitem"/>
-
+        tools:listitem="@layout/postitem" />
 
 
     <com.google.android.material.progressindicator.CircularProgressIndicator

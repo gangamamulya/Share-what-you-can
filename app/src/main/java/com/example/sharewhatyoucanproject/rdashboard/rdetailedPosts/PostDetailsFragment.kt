@@ -7,28 +7,27 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.example.sharewhatyoucanproject.databinding.FragmentRDetailsBinding
+import coil.load
+import com.example.sharewhatyoucanproject.databinding.FragmentPostDetailsBinding
 import com.example.sharewhatyoucanproject.models.PostModel
-import com.example.sharewhatyoucanproject.rposts.RPostViewModel
-import com.example.sharewhatyoucanproject.rposts.RPostViewModelFactory
+
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class RDetailsFragment : Fragment() {
+class PostDetailsFragment : Fragment() {
 
-    private var _binding: FragmentRDetailsBinding? = null
+    private var _binding: FragmentPostDetailsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var rDetailsViewModel: RDetailsViewModel
+    private lateinit var postDetailsViewModel: PostDetailsViewModel
 
-    private val args: RDetailsFragmentArgs by navArgs()
+    private val args: PostDetailsFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rDetailsViewModel = ViewModelProvider(
+        postDetailsViewModel = ViewModelProvider(
             this,
-            RDetailsViewModelFactory(),
-        )[RDetailsViewModel::class.java]
+            PostDetailsViewModelFactory(),
+        )[PostDetailsViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -36,17 +35,18 @@ class RDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentRDetailsBinding.inflate(inflater, container, false)
+        _binding = FragmentPostDetailsBinding.inflate(inflater, container, false)
         val post = Json.decodeFromString<PostModel>(args.postModel)
 
         binding.rtitle.text = post.title
         binding.rdesc.text = post.desc
-
-        Glide.with(requireContext())
-            .load(post.image)
-            .into(binding.rdetailimg)
+        binding.rdetailimg.load(post.image)
 
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

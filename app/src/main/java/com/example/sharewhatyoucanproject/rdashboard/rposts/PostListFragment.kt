@@ -11,29 +11,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.sharewhatyoucanproject.Adapters.PostAdapter
-import com.example.sharewhatyoucanproject.databinding.FragmentRpostBinding
-import com.example.sharewhatyoucanproject.rposts.RPostViewModel
-import com.example.sharewhatyoucanproject.rposts.RPostViewModelFactory
+import com.example.sharewhatyoucanproject.databinding.FragmentPostListBinding
+import com.example.sharewhatyoucanproject.rdashboard.rdetailedPosts.PostDetailsViewModel
+import com.example.sharewhatyoucanproject.rposts.PostListViewModel
+import com.example.sharewhatyoucanproject.rposts.PostListViewModelFactory
 import com.example.sharewhatyoucanproject.rposts.TaskResult
 import com.example.sharewhatyoucanproject.utils.showToast
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class RPostFragment : Fragment() {
-    private var _binding: FragmentRpostBinding? = null
+class PostListFragment : Fragment() {
+    private var _binding: FragmentPostListBinding? = null
     private val binding get() = _binding!!
     private lateinit var foodList: RecyclerView
     private lateinit var postAdapter: PostAdapter
     lateinit var circularProgressIndicator: CircularProgressIndicator
-    private lateinit var rPostViewModel: RPostViewModel
+    private lateinit var postListViewModel: PostListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rPostViewModel = ViewModelProvider(
+        postListViewModel = ViewModelProvider(
             this,
-            RPostViewModelFactory(),
-        )[RPostViewModel::class.java]
+            PostListViewModelFactory(),
+        )[PostListViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -41,14 +42,14 @@ class RPostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentRpostBinding.inflate(inflater, container, false)
+        _binding = FragmentPostListBinding.inflate(inflater, container, false)
         circularProgressIndicator = binding.progressCircular
 
         binding.progressCircular.visibility = View.VISIBLE
         foodList = binding.foodlist
         postAdapter = PostAdapter(requireContext()) { postModel ->
             val action =
-                RPostFragmentDirections.actionDashboardFragmentToRDetailsFragment(
+                PostListFragmentDirections.actionDashboardFragmentToRDetailsFragment(
                     Json.encodeToString(
                         postModel,
                     ),
@@ -57,13 +58,15 @@ class RPostFragment : Fragment() {
         }
         foodList.adapter = postAdapter
         foodList.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-        rPostViewModel.getlist()
+        postListViewModel.getlist()
 
-        rPostViewModel.taskResult.observe(viewLifecycleOwner) { taskResult ->
+        postListViewModel.taskResult.observe(viewLifecycleOwner) { taskResult ->
             when (taskResult) {
                 is TaskResult.Success -> {
                     binding.progressCircular.visibility = View.GONE
                     postAdapter.setPostsList(taskResult.arrayList)
+
+
                 }
                 is TaskResult.Error -> {
                     circularProgressIndicator.visibility = View.GONE
@@ -74,8 +77,8 @@ class RPostFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
+        super.onDestroy()
         _binding = null
-        super.onDestroyView()
     }
 }

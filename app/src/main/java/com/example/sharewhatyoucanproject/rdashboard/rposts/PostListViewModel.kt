@@ -10,10 +10,10 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.collections.ArrayList
 
-class RPostViewModel(
+class PostListViewModel(
     private val db: FirebaseFirestore,
 ) : ViewModel() {
-    var arrayList: ArrayList<PostModel> = mutableListOf<PostModel>() as ArrayList<PostModel>
+    private val arrayList: ArrayList<PostModel> = mutableListOf<PostModel>() as ArrayList<PostModel>
     private val _taskResult = MutableLiveData<TaskResult>()
     val taskResult: LiveData<TaskResult> = _taskResult
 
@@ -24,16 +24,16 @@ class RPostViewModel(
             .addOnCompleteListener(
                 OnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        for (ds in task.getResult()) {
-                            val postModel = ds.getGeoPoint("location")?.let {
+                        for (postResult in task.result) {
+                            val postModel = postResult.getGeoPoint("location")?.let {
                                 PostModel(
-                                    ds.get("imageUrl").toString(),
-                                    "" + ds.getString("title"),
-                                    "" + ds.getString("description"),
-                                    ds.getString("uid").toString(),
-                                    ds.getString("name").toString(),
-                                    ("" + ds.get("status")).toInt(),
-                                    ds.getId(),
+                                    postResult.get("imageUrl").toString(),
+                                    "" + postResult.getString("title").toString(),
+                                    "" + postResult.getString("description").toString(),
+                                    postResult.getString("uid").toString(),
+                                    postResult.getString("name").toString(),
+                                    ("" + postResult.get("status")).toInt(),
+                                    postResult.id,
                                     GeoPoint(it.latitude, it.longitude),
                                 )
                             }
@@ -50,11 +50,11 @@ class RPostViewModel(
     }
 }
 
-class RPostViewModelFactory(
+class PostListViewModelFactory(
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return RPostViewModel(db) as T
+        return PostListViewModel(db) as T
     }
 }
 

@@ -4,14 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostModel(
-    var image: String,
-    var title: String,
-    var desc: String,
-    var uid: String,
-    var name: String,
-    var status: Int,
-    var postid: String,
-    var location: GeoPoint? = null,
+    val image: String,
+    val title: String,
+    val desc: String,
+    val uid: String,
+    val name: String,
+    val status: Int,
+    val postid: String,
+    val location: GeoPoint? = null,
 )
 
 @Serializable

@@ -5,15 +5,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sharewhatyoucanproject.models.PostModel
 import com.google.firebase.firestore.FirebaseFirestore
 
-class RDetailsViewModel(
+class PostDetailsViewModel(
     private val db: FirebaseFirestore,
 ) : ViewModel()
 
-class RDetailsViewModelFactory(
+class PostDetailsViewModelFactory(
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return RDetailsViewModel(db) as T
+        return PostDetailsViewModel(db) as T
     }
 }
 

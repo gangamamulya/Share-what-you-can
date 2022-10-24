@@ -110,7 +110,7 @@
     <string name="chat">Chat</string>
     <string name="reviews">Reviews</string>
     <string name="log_out">Log out</string>
-    <string name="title_activity_rdetails_fragment">RdetailsFragment</string>
+    <string name="title_activity_rdetails_fragment">Post details</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

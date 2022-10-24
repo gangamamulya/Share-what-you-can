@@ -91,9 +91,9 @@
         tools:layout="@layout/fragment_add_donor" />
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.example.sharewhatyoucanproject.rdashboard.rposts.RPostFragment"
+        android:name="com.example.sharewhatyoucanproject.rdashboard.rposts.PostListFragment"
         android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_rpost">
+        tools:layout="@layout/fragment_post_list">
         <argument
             android:name="type"
             android:defaultValue="1" />
@@ -103,9 +103,9 @@
     </fragment>
     <fragment
         android:id="@+id/RDetailsFragment"
-        android:name="com.example.sharewhatyoucanproject.rdashboard.rdetailedPosts.RDetailsFragment"
+        android:name="com.example.sharewhatyoucanproject.rdashboard.rdetailedPosts.PostDetailsFragment"
         android:label="fragment_details_r"
-        tools:layout="@layout/fragment_r_details">
+        tools:layout="@layout/fragment_post_details">
         <argument
             android:name="postModel"
             android:defaultValue="" />

@@ -28,8 +28,8 @@ class PostListViewModel(
                             val postModel = postResult.getGeoPoint("location")?.let {
                                 PostModel(
                                     postResult.get("imageUrl").toString(),
-                                    "" + postResult.getString("title").toString(),
-                                    "" + postResult.getString("description").toString(),
+                                    postResult.getString("title").toString(),
+                                    postResult.getString("description").toString(),
                                     postResult.getString("uid").toString(),
                                     postResult.getString("name").toString(),
                                     ("" + postResult.get("status")).toInt(),

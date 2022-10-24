@@ -36,8 +36,6 @@ class PostAdapter(
             posttitle.text = postModel.title
             postdesc.text = postModel.desc
 
-            postimg.load(postModel.image)
-
             itemView.setOnClickListener {
                 onPostClicked(postModel)
             }

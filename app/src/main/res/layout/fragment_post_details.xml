@@ -37,18 +37,18 @@
             android:id="@+id/rtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pizza"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Pizza" />
 
         <TextView
             android:id="@+id/rdesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Hot pizza available for now"
-            android:textColor="#696969" />
+            android:textColor="#696969"
+            tools:text="Hot pizza available for now" />
 
 
     </LinearLayout>

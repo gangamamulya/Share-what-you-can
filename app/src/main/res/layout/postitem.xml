@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="4dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/postimg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="@drawable/curvebtn"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pizza" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:paddingVertical="4dp"
+            android:paddingHorizontal="4dp"
+            android:background="@drawable/textcorner"
+            android:layout_gravity="bottom"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                tools:text="My title"
+                android:textSize="12sp"
+                android:id="@+id/posttitle"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="12dp"
+                android:layout_marginTop="4dp"
+                android:id="@+id/postdesc"
+                android:layout_height="wrap_content"
+                tools:text="hello \nthis is vegitable pizza \nHome made one"
+                android:maxLines="1"
+                android:textColor="#F1F1F1"
+                android:textStyle="bold"/>
+
+            <RatingBar
+                android:id="@+id/oprating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/ratingBarStyleSmall"
+                android:visibility="gone"
+                android:numStars="5"
+                android:progressTint="#FFEB3B"
+                android:rating="2.5"
+                android:stepSize="0.1"
+                android:isIndicator="true" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

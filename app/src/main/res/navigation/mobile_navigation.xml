@@ -91,12 +91,24 @@
         tools:layout="@layout/fragment_add_donor" />
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.example.sharewhatyoucanproject.dashboard.DashboardFragment"
+        android:name="com.example.sharewhatyoucanproject.rdashboard.rposts.PostListFragment"
         android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_dashboard">
+        tools:layout="@layout/fragment_post_list">
         <argument
             android:name="type"
             android:defaultValue="1" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_RDetailsFragment"
+            app:destination="@id/RDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/RDetailsFragment"
+        android:name="com.example.sharewhatyoucanproject.rdashboard.rdetailedPosts.PostDetailsFragment"
+        android:label="fragment_details_r"
+        tools:layout="@layout/fragment_post_details">
+        <argument
+            android:name="postModel"
+            android:defaultValue="" />
     </fragment>
 
 </navigation>

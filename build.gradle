@@ -16,6 +16,8 @@ buildscript {
     //firebase crashlytics
     classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
     classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2"
+    //serialization
+    classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
 
   }
 }

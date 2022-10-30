@@ -150,9 +150,9 @@ class AddDonorFragment : Fragment() {
                     requireActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION,
                 ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ) != PackageManager.PERMISSION_GRANTED
+                        requireActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                    ) != PackageManager.PERMISSION_GRANTED
             ) {
                 // TODO: Consider calling ActivityCompat#requestPermissions
             }

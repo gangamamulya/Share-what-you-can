@@ -26,11 +26,7 @@
         android:name="com.example.sharewhatyoucanproject.posts.PostsFragment"
         android:label="@string/your_listings"
         tools:layout="@layout/fragment_posts" />
-    <fragment
-        android:id="@+id/request_fragment"
-        android:name="com.example.sharewhatyoucanproject.RequestFragment"
-        android:label="@string/requests"
-        tools:layout="@layout/fragment_request" />
+
     <fragment
         android:id="@+id/user_fragment"
         android:name="com.example.sharewhatyoucanproject.user.UserFragment"
@@ -70,6 +66,9 @@
         <action
             android:id="@+id/action_login_fragment_to_selectUserFragment"
             app:destination="@id/select_user_fragment" />
+        <action
+            android:id="@+id/action_login_fragment_to_postListFragment"
+            app:destination="@id/dashboardFragment" />
 
     </fragment>
     <fragment
@@ -109,6 +108,31 @@
         <argument
             android:name="postModel"
             android:defaultValue="" />
+        <action
+            android:id="@+id/RDetailsFragment_to_RequestFragment"
+            app:destination="@id/request_fragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/request_fragment"
+        android:name="com.example.sharewhatyoucanproject.foodrequest.RequestFragment"
+        android:label="@string/requests"
+        tools:layout="@layout/fragment_request">
+        <argument
+            android:name="requestModel"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/action_request_fragment_to_deliver_fragment"
+            app:destination="@id/DeliverFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/DeliverFragment"
+        android:name="com.example.sharewhatyoucanproject.deliverfood.DeliverFragment"
+        android:label="DeliverFragment"
+        tools:layout="@layout/fragment_deliver">
+        <argument
+            android:name="requestModel"
+            android:defaultValue="" />
+    </fragment>
 </navigation>

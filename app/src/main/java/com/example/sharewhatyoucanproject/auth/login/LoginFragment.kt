@@ -58,8 +58,13 @@ class LoginFragment : Fragment() {
                 }
                 is AuthenticationResult.LoginSuccess -> {
                     binding.progressCircular.visibility = GONE
-                    val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
-                    findNavController().navigate(action)
+                    if (loginViewModel.type == UserType.DONOR) {
+                        val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
+                        findNavController().navigate(action)
+                    } else {
+                        val action = LoginFragmentDirections.actionLoginFragmentToPostListFragment()
+                        findNavController().navigate(action)
+                    }
                 }
                 is AuthenticationResult.SignUpSuccess -> {
                     requireContext().showToast("Created")

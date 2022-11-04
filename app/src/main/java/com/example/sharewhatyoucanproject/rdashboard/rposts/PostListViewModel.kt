@@ -35,6 +35,7 @@ class PostListViewModel(
                                     ("" + postResult.get("status")).toInt(),
                                     postResult.id,
                                     GeoPoint(it.latitude, it.longitude),
+
                                 )
                             }
                             if (postModel != null) {

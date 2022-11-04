@@ -40,7 +40,7 @@ class OnBoardingFragment : Fragment() {
 
         binding.receiverimg.setOnClickListener {
             val action =
-                OnBoardingFragmentDirections.actionOnBoardingFragmentToDashboardFragment(UserType.RECEIVER.ordinal)
+                OnBoardingFragmentDirections.actionOnBoardingFragmentToLoginFragment(UserType.RECEIVER.ordinal)
             findNavController().navigate(action)
         }
 

@@ -1,4 +1,4 @@
-package com.example.sharewhatyoucanproject.Adapters
+package com.donation.myfoodapp.Adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -23,7 +23,6 @@ class PostAdapter(
         arrayList.clear()
         arrayList.addAll(list)
         notifyDataSetChanged()
-
     }
 
     inner class PostsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,11 +30,9 @@ class PostAdapter(
         val postdesc: TextView = itemView.findViewById(R.id.postdesc)
         val postimg: ImageView = itemView.findViewById(R.id.postimg)
 
-
         fun bind(postModel: PostModel) {
             posttitle.text = postModel.title
             postdesc.text = postModel.desc
-
             itemView.setOnClickListener {
                 onPostClicked(postModel)
             }

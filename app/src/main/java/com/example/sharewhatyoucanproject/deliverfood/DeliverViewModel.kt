@@ -21,6 +21,7 @@ class DeliverViewModel(
     private val _donationResult = MutableLiveData<DonationResult>()
     val donationResult: MutableLiveData<DonationResult> = _donationResult
 
+
     fun getItems() {
         db.collection("posts")
             .whereEqualTo("uid", FirebaseAuth.getInstance().currentUser!!.uid)
@@ -32,11 +33,11 @@ class DeliverViewModel(
                     for (ds in task.result) {
                         val postModel = ds.getGeoPoint("location")?.let {
                             PostModel(
-                                ds.getString("imageUrl")!!,
+                                ds.getString("imageUrl").toString(),
                                 "" + ds.getString("title"),
                                 "" + ds.getString("description"),
-                                ds.getString("uid")!!,
-                                ds.getString("name")!!,
+                                ds.getString("uid").toString(),
+                                ds.getString("name").toString(),
                                 ("" + ds["status"]).toInt(),
                                 ds.id,
                                 GeoPoint(it.latitude, it.longitude),
@@ -56,7 +57,8 @@ class DeliverViewModel(
 
     fun donate(postModel: PostModel, requestModel: RequestModel) {
         val donationmap: MutableMap<String, Any?> = HashMap()
-        donationmap["doner"] = FirebaseAuth.getInstance().currentUser!!.displayName
+
+        donationmap["donor"] = FirebaseAuth.getInstance().currentUser!!.displayName
         donationmap["donatedTo"] = requestModel.uid + ""
         donationmap["receiverName"] = requestModel.name + ""
         donationmap["time"] = FieldValue.serverTimestamp()
@@ -72,8 +74,8 @@ class DeliverViewModel(
         val uref2 = db.collection("requests").document(requestModel.updateid)
         db.runBatch { batch ->
             batch.set(sref, donationmap)
-            batch.update(uref, "status", 2)
-            batch.update(uref2, "status", 2)
+            batch.update(uref, "status", FoodDonationCompleted)
+            batch.update(uref2, "status", FoodDonationCompleted)
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 _donationResult.value = DonationResult.Success
@@ -81,6 +83,10 @@ class DeliverViewModel(
                 _donationResult.value = DonationResult.Error
             }
         }
+    }
+
+    companion object {
+        val FoodDonationCompleted = 2
     }
 }
 

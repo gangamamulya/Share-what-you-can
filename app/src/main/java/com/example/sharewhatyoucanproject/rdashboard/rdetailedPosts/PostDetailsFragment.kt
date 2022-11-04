@@ -51,55 +51,44 @@ class PostDetailsFragment : Fragment() {
         val post = Json.decodeFromString<PostModel>(args.postModel)
         circularProgressIndicator = binding.progressCircular
         requestbtn = binding.requestbtn
-
         binding.rtitle.text = post.title
         binding.rdesc.text = post.desc
         binding.rdetailimg.load(post.image)
-
-        postDetailsViewModel.name = post.name
-        postDetailsViewModel.userid = post.uid
-        postDetailsViewModel.id = post.postid
-        postDetailsViewModel.title = post.title
-        postDetailsViewModel.desc = post.desc
-        postDetailsViewModel.imgurl = post.image
-        postDetailsViewModel.postlocationlat = post.location?.latitude
-        postDetailsViewModel.postlocationlong = post.location?.longitude
-
+        postDetailsViewModel.postDetailsViewModel = post
         binding.requestbtn.setOnClickListener {
             postDetailsViewModel.sendFoodRequest()
-        }
 
-        postDetailsViewModel.detailsResult.observe(viewLifecycleOwner) { detailsResult ->
-            when (detailsResult) {
-                is DetailsResult.GetFoodRequestSuccessAlreadySent -> {
-                    Log.d("result of detailsResult", detailsResult.toString())
-                    binding.requestbtn.isEnabled = false
-                    binding.requestbtn.setBackgroundResource(R.drawable.graycurve)
-                    binding.requestbtn.text = "Already Sent"
+            postDetailsViewModel.detailsResult.observe(viewLifecycleOwner) { detailsResult ->
+                when (detailsResult) {
+                    is DetailsResult.GetFoodRequestSuccessAlreadySent -> {
+                        Log.d("result of detailsResult", detailsResult.toString())
+                        binding.requestbtn.isEnabled = false
+                        binding.requestbtn.setBackgroundResource(R.drawable.graycurve)
+                        binding.requestbtn.text = "Already Sent"
 
-                    binding.progressCircular.visibility = View.GONE
-                }
-                is DetailsResult.SendFoodRequestSuccess -> {
-                    Log.d("SendFoodRequestSuccess", detailsResult.toString())
-                    binding.requestbtn.isEnabled = false
-                    binding.requestbtn.text = "Request Sent"
-                    binding.requestbtn.setBackgroundResource(R.drawable.graycurve)
-                    requireContext().showToast("Request Sent")
-                    // findNavController().navigateUp()
-                }
-                is DetailsResult.Error -> {
-                    requireContext().showToast("Request Failed")
-                }
+                        binding.progressCircular.visibility = View.GONE
+                    }
+                    is DetailsResult.SendFoodRequestSuccess -> {
+                        Log.d("SendFoodRequestSuccess", detailsResult.toString())
+                        binding.requestbtn.isEnabled = false
+                        binding.requestbtn.text = "Request Sent"
+                        binding.requestbtn.setBackgroundResource(R.drawable.graycurve)
+                        requireContext().showToast("Request Sent")
+                        // findNavController().navigateUp()
+                    }
+                    is DetailsResult.Error -> {
+                        requireContext().showToast("Request Failed")
+                    }
 
-                is DetailsResult.GetFoodRequestSuccessAccepted -> {
-                    Log.d("result of detailsResult", detailsResult.toString())
-                    requestbtn.setBackgroundResource(R.drawable.greencurve)
-                    requestbtn.text = "Accepted"
-                    requestbtn.isEnabled = false
+                    is DetailsResult.GetFoodRequestSuccessAccepted -> {
+                        Log.d("result of detailsResult", detailsResult.toString())
+                        requestbtn.setBackgroundResource(R.drawable.greencurve)
+                        requestbtn.text = "Accepted"
+                        requestbtn.isEnabled = false
+                    }
                 }
             }
         }
-
         return binding.root
     }
 

@@ -3,6 +3,7 @@ package com.example.sharewhatyoucanproject.rdashboard.rdetailedPosts
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.sharewhatyoucanproject.models.PostModel
 import com.example.sharewhatyoucanproject.models.RequestModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +19,7 @@ class PostDetailsViewModel(
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    lateinit var postDetailsViewModel: PostModel
     lateinit var userid: String
     lateinit var name: String
     lateinit var id: String
@@ -34,16 +36,18 @@ class PostDetailsViewModel(
     val detailsResult: MutableLiveData<DetailsResult> = _detailsResult
 
     fun sendFoodRequest() {
-        val mypoint = GeoPoint(postlocationlat!!, postlocationlong!!)
+        val mypoint = GeoPoint(postDetailsViewModel.location?.latitude!!,
+            postDetailsViewModel.location?.longitude!!,
+        )
         val requestmap: MutableMap<String, Any?> = HashMap()
         requestmap["name"] = auth.currentUser!!.displayName
         requestmap["uid"] = auth.currentUser!!.uid
         requestmap["status"] = 0
-        requestmap["postId"] = id
-        requestmap["ownerId"] = userid
-        requestmap["for"] = title
+        requestmap["postId"] = postDetailsViewModel.postid
+        requestmap["ownerId"] = postDetailsViewModel.uid
+        requestmap["for"] = postDetailsViewModel.title
         requestmap["time"] = FieldValue.serverTimestamp()
-        requestmap["ownerName"] = name
+        requestmap["ownerName"] = postDetailsViewModel.name
         requestmap["location"] = mypoint
         db.collection("requests")
             .add(requestmap)
@@ -61,7 +65,7 @@ class PostDetailsViewModel(
     fun getFoodRequest() {
         db.collection("requests")
             .whereEqualTo("uid", auth.currentUser?.uid)
-            .whereEqualTo("postId", id)
+            .whereEqualTo("postId", postDetailsViewModel.postid)
             .get()
             .addOnCompleteListener(
                 OnCompleteListener { task ->

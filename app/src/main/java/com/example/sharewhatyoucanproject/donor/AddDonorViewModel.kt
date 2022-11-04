@@ -18,7 +18,7 @@ import kotlin.collections.HashMap
 class AddDonorViewModel(
     private val db: FirebaseFirestore,
     private val storageReference: StorageReference,
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
 ) : ViewModel() {
     private lateinit var uploadTask: UploadTask
 

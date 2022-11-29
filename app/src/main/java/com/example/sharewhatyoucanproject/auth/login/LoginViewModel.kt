@@ -3,9 +3,9 @@ package com.example.sharewhatyoucanproject.auth.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.sharewhatyoucanproject.models.UserType
-import com.example.sharewhatyoucanproject.utils.generatePassword
-import com.example.sharewhatyoucanproject.utils.getRandomName
+import com.example.sharewhatyoucanproject.utils.nameArray
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -14,11 +14,11 @@ import kotlin.collections.HashMap
 import kotlin.collections.MutableMap
 import kotlin.collections.set
 
-class LoginViewModel() : ViewModel() {
+class LoginViewModel(
 
-    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
-
+    private val db: FirebaseFirestore?,
+    private val auth: FirebaseAuth?,
+) : ViewModel() {
     private val _authenticationResult = MutableLiveData<AuthenticationResult>()
     val authenticationResult: LiveData<AuthenticationResult> = _authenticationResult
 
@@ -27,16 +27,16 @@ class LoginViewModel() : ViewModel() {
 
     var type: UserType = UserType.UNKNOWN
     var deviceId: String = ""
-    private var userId: String = ""
-    private var userEmail: String = ""
+    var userId: String = ""
+    var userEmail: String = ""
 
     fun checkUser(deviceId: String) {
-        val email = "s$deviceId@gmail.com"
+        val email = generateEmail(deviceId)
         generatePassword(email)
-        db.collection("users")
-            .whereEqualTo("email", email)
-            .get()
-            .addOnCompleteListener { task ->
+        db?.collection("users")
+            ?.whereEqualTo("email", email)
+            ?.get()
+            ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val size = task.result.size()
                     if (size == 0) {
@@ -52,10 +52,10 @@ class LoginViewModel() : ViewModel() {
     }
 
     private fun signUp(email: String) {
-        auth.createUserWithEmailAndPassword(
+        auth?.createUserWithEmailAndPassword(
             email,
             generatePassword(email),
-        ).addOnCompleteListener {
+        )?.addOnCompleteListener {
             if (it.isSuccessful) {
                 userEmail = email
                 userId = it.result.user?.uid ?: ""
@@ -68,16 +68,11 @@ class LoginViewModel() : ViewModel() {
     }
 
     fun saveUserData() {
-        val userMap: MutableMap<String, String> = HashMap()
         val userName = getRandomName()
-        userMap["name"] = userName
-        userMap["email"] = userEmail
-        userMap["uuid"] = userId
-        userMap["deviceId"] = deviceId
-        db.collection("users")
-            .document(userId)
-            .set(userMap)
-            .addOnCompleteListener { task ->
+        db?.collection("users")
+            ?.document(userId)
+            ?.set(getUserMap(userName))
+            ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     updateUser(userName)
                 } else {
@@ -87,8 +82,17 @@ class LoginViewModel() : ViewModel() {
             }
     }
 
+    fun getUserMap(userName: String): MutableMap<String, String> {
+        val userMap: MutableMap<String, String> = HashMap()
+        userMap["name"] = userName
+        userMap["email"] = userEmail
+        userMap["uuid"] = userId
+        userMap["deviceId"] = deviceId
+        return userMap
+    }
+
     private fun updateUser(userName: String) {
-        val user: FirebaseUser? = auth.currentUser
+        val user: FirebaseUser? = auth?.currentUser
         val profileUpdates: UserProfileChangeRequest =
             UserProfileChangeRequest.Builder()
                 .setDisplayName("" + userName)
@@ -106,8 +110,8 @@ class LoginViewModel() : ViewModel() {
     }
 
     private fun loginUser(email: String) {
-        auth.signInWithEmailAndPassword(email, generatePassword(email))
-            .addOnCompleteListener { task ->
+        auth?.signInWithEmailAndPassword(email, generatePassword(email))
+            ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (type == UserType.DONOR || type == UserType.RECEIVER) {
                         _selectorResult.value = type
@@ -118,6 +122,29 @@ class LoginViewModel() : ViewModel() {
                         AuthenticationResult.Fail("Failed ${task.exception}")
                 }
             }
+    }
+
+    fun generatePassword(email: String): String {
+        return "Test@1${email.substring(2, 9)}"
+    }
+
+    fun generateEmail(deviceId: String): String {
+        return "s$deviceId@gmail.com"
+    }
+
+    fun getRandomName(): String {
+        val random = (1111 until 9999).random()
+        val nameIndex = (0..9).random()
+        return nameArray[nameIndex] + random
+    }
+}
+
+class LoginViewModelFactory(
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance(),
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return LoginViewModel(db, auth) as T
     }
 }
 

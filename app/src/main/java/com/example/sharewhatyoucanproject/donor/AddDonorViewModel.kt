@@ -1,4 +1,4 @@
-package com.example.sharewhatyoucanproject
+package com.example.sharewhatyoucanproject.donor
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -16,9 +16,9 @@ import java.util.UUID
 import kotlin.collections.HashMap
 
 class AddDonorViewModel(
-    private val db: FirebaseFirestore,
-    private val storageReference: StorageReference,
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    private val db: FirebaseFirestore?,
+    private val storageReference: StorageReference?,
+    private val auth: FirebaseAuth? = FirebaseAuth.getInstance(),
 ) : ViewModel() {
     private lateinit var uploadTask: UploadTask
 
@@ -76,11 +76,11 @@ class AddDonorViewModel(
         postMap["status"] = 0
         postMap["type"] = foodType
         postMap["location"] = currentLocation
-        postMap["uid"] = auth.currentUser!!.uid
-        postMap["name"] = auth.currentUser!!.displayName
-        db.collection("posts")
-            .add(postMap)
-            .addOnCompleteListener { task ->
+        postMap["uid"] = auth?.currentUser?.uid
+        postMap["name"] = auth?.currentUser?.displayName
+        db?.collection("posts")
+            ?.add(postMap)
+            ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _donorResult.value = DonorResult.Success
                 } else {
@@ -90,7 +90,7 @@ class AddDonorViewModel(
     }
 
     fun uploadImage() {
-        storageReference.let {
+        storageReference?.let {
             val ref = it.child("images/" + UUID.randomUUID())
             uploadTask = ref.putFile(filepath!!)
             uploadTask.continueWithTask { task ->

@@ -1,6 +1,5 @@
-package com.donation.myfoodapp.Adapters
+package com.example.sharewhatyoucanproject.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +12,14 @@ import com.example.sharewhatyoucanproject.R
 import com.example.sharewhatyoucanproject.models.PostModel
 
 class PostAdapter(
-    private val context: Context,
     private val onPostClicked: (PostModel) -> Unit,
 ) : RecyclerView.Adapter<PostAdapter.PostsViewHolder>() {
 
-    private val arrayList = mutableListOf<PostModel>()
+    val arrayList = mutableListOf<PostModel>()
 
     fun setPostsList(list: List<PostModel>) {
         arrayList.clear()
         arrayList.addAll(list)
-        notifyDataSetChanged()
     }
 
     inner class PostsViewHolder(view: View) : RecyclerView.ViewHolder(view) {

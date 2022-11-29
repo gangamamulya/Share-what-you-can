@@ -57,10 +57,12 @@ class RequestFragment : Fragment() {
                 is RequestResult.GetRequestListSuccess -> {
                     binding.progressCircular.visibility = View.GONE
                     requestAdapter.setRequestList(requestResult.arrayList)
+                    requestAdapter.notifyDataSetChanged()
                 }
                 is RequestResult.GetRequestInOrderSuccess -> {
                     binding.progressCircular.visibility = View.GONE
                     requestAdapter.setRequestList(requestResult.arrayList)
+                    requestAdapter.notifyDataSetChanged()
                 }
                 is RequestResult.Error -> {
                     circularProgressIndicator.visibility = View.GONE
@@ -83,6 +85,7 @@ class RequestFragment : Fragment() {
                     }
                     is ApproveResult.ChangeButton -> {
                         requestAdapter.updateRequestListStatus(approveFoodResult.uid)
+                        requestAdapter.notifyDataSetChanged()
                         requestViewModel.resetApproveFood()
                     }
                 }

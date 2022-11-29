@@ -70,6 +70,7 @@ class DeliverFragment : Fragment() {
                 when (deliverResult) {
                     is DeliverResult.DeliveredSuccess -> {
                         deliverAdapter.setDeliverList(deliverResult.List)
+                        deliverAdapter.notifyDataSetChanged()
                     }
                     is DeliverResult.Error -> {}
                 }

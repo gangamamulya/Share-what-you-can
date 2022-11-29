@@ -14,17 +14,15 @@ class RequestAdapter(
     private val onPostClicked: (RequestModel, String) -> Unit,
 ) : RecyclerView.Adapter<RequestAdapter.RequestsViewHolder>() {
 
-    private val arrayList = mutableListOf<RequestModel>()
+    val arrayList = mutableListOf<RequestModel>()
 
     fun setRequestList(list: List<RequestModel>) {
         arrayList.clear()
         arrayList.addAll(list)
-        notifyDataSetChanged()
     }
 
     fun updateRequestListStatus(uid: String) {
         arrayList.findLast { it.uid == uid }?.apply { status = 1 }
-        notifyDataSetChanged()
     }
 
     lateinit var auth: FirebaseAuth

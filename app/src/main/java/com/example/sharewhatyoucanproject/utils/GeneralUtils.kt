@@ -14,6 +14,7 @@ import com.example.sharewhatyoucanproject.auth.login.LoginFragmentArgs
 import com.example.sharewhatyoucanproject.models.UserType
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.GeoPoint
+import java.util.*
 
 fun Context.showToast(message: String) {
     Toast.makeText(
@@ -33,8 +34,8 @@ fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
     if (context != null) {
         for (permission in permissions) {
             if (permission?.let {
-                ActivityCompat.checkSelfPermission(context, it)
-            } != PackageManager.PERMISSION_GRANTED
+                    ActivityCompat.checkSelfPermission(context, it)
+                } != PackageManager.PERMISSION_GRANTED
             ) {
                 return false
             }
@@ -43,11 +44,6 @@ fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
     return true
 }
 
-fun getRandomName(): String {
-    val random = (1111 until 9999).random()
-    val nameIndex = (0..9).random()
-    return nameArray[nameIndex] + random
-}
 
 fun getUserType(args: LoginFragmentArgs): UserType {
     return UserType.values()[args.type]
@@ -65,6 +61,29 @@ fun getCurrentLocation(activity: Activity, onGetLocation: (GeoPoint) -> Unit) {
         }
 }
 
-fun generatePassword(email: String): String {
-    return "Test@1${email.substring(2, 9)}"
+fun randomRoom(): String {
+    val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    val sb = StringBuilder()
+    val random = Random()
+    val length = 20
+    for (i in 0 until length) {
+        val index = random.nextInt(alphabet.length)
+        val randomChar = alphabet[index]
+
+        sb.append(randomChar)
+    }
+    return sb.toString()
 }
+
+fun getNameFromType(type: UserType): String {
+    return when (type) {
+        UserType.DONOR -> {
+            "Donor"
+        }
+        UserType.RECEIVER -> {
+            "Receiver"
+        }
+        else -> ""
+    }
+}
+

@@ -13,14 +13,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import coil.load
-import com.example.sharewhatyoucanproject.AddDonorViewModel
-import com.example.sharewhatyoucanproject.AddDonorViewModelFactory
-import com.example.sharewhatyoucanproject.DonorResult
 import com.example.sharewhatyoucanproject.databinding.FragmentAddDonorBinding
 import com.example.sharewhatyoucanproject.utils.PERMISSION_ALL
 import com.example.sharewhatyoucanproject.utils.foodTypes
@@ -150,9 +146,9 @@ class AddDonorFragment : Fragment() {
                     requireActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION,
                 ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        requireActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                    ) != PackageManager.PERMISSION_GRANTED
+                    requireActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                ) != PackageManager.PERMISSION_GRANTED
             ) {
                 // TODO: Consider calling ActivityCompat#requestPermissions
             }

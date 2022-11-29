@@ -13,12 +13,11 @@ import com.example.sharewhatyoucanproject.models.PostModel
 class DeliverAdapter(
     private val onPostClicked: (PostModel) -> Unit,
 ) : RecyclerView.Adapter<DeliverAdapter.DeliverViewHolder>() {
-    private val arrayList = mutableListOf<PostModel>()
+    val arrayList = mutableListOf<PostModel>()
 
     fun setDeliverList(list: List<PostModel>) {
         arrayList.clear()
         arrayList.addAll(list)
-        notifyDataSetChanged()
     }
 
     inner class DeliverViewHolder(view: View) : RecyclerView.ViewHolder(view) {

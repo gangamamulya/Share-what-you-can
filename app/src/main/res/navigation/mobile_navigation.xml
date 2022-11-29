@@ -32,11 +32,7 @@
         android:name="com.example.sharewhatyoucanproject.user.UserFragment"
         android:label="@string/chat"
         tools:layout="@layout/fragment_user" />
-    <fragment
-        android:id="@+id/review_fragment"
-        android:name="com.example.sharewhatyoucanproject.review.ReviewFragment"
-        android:label="@string/reviews"
-        tools:layout="@layout/fragment_review" />
+
     <fragment
         android:id="@+id/on_boarding_fragment"
         android:name="com.example.sharewhatyoucanproject.auth.onboarding.OnBoardingFragment"

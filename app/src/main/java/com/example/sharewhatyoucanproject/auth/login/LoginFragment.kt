@@ -13,16 +13,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.sharewhatyoucanproject.MainActivity
 import com.example.sharewhatyoucanproject.databinding.FragmentLoginBinding
 import com.example.sharewhatyoucanproject.models.UserType
 import com.example.sharewhatyoucanproject.utils.editSharedPreferencesSelector
 import com.example.sharewhatyoucanproject.utils.getUserType
 import com.example.sharewhatyoucanproject.utils.showToast
+import com.example.sharewhatyoucanproject.utils.*
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+    var deviceId = ""
 
     private lateinit var loginViewModel: LoginViewModel
 
@@ -30,7 +33,8 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        loginViewModel =
+            ViewModelProvider(this, LoginViewModelFactory())[LoginViewModel::class.java]
     }
 
     @SuppressLint("HardwareIds")
@@ -41,7 +45,8 @@ class LoginFragment : Fragment() {
     ): View? {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
-        (activity as AppCompatActivity?)?.supportActionBar?.hide()
+        if (activity is MainActivity)
+            (activity as AppCompatActivity?)?.supportActionBar?.hide()
 
         loginViewModel.type = getUserType(args)
 
@@ -81,23 +86,21 @@ class LoginFragment : Fragment() {
             }
         }
 
-        if (loginViewModel.type == UserType.DONOR) {
-            binding.mytv.text = "Donor"
-        } else if (loginViewModel.type == UserType.RECEIVER) {
-            binding.mytv.text = "Receiver"
-        }
+        binding.mytv.text = getNameFromType(loginViewModel.type)
 
         binding.submitdevice.setOnClickListener {
-            val deviceId = Settings.Secure.getString(
-                requireActivity().contentResolver,
-                Settings.Secure.ANDROID_ID,
-            )
+            if (deviceId == "")
+                deviceId = Settings.Secure.getString(
+                    requireActivity().contentResolver,
+                    Settings.Secure.ANDROID_ID,
+                )
             loginViewModel.deviceId = deviceId
             binding.progressCircular.visibility = VISIBLE
             loginViewModel.checkUser(deviceId)
         }
         return binding.root
     }
+
 
     override fun onDestroyView() {
         _binding = null

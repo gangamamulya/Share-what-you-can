@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.donation.myfoodapp.Adapters.PostAdapter
+import com.example.sharewhatyoucanproject.adapters.PostAdapter
 import com.example.sharewhatyoucanproject.databinding.FragmentPostListBinding
 import com.example.sharewhatyoucanproject.rposts.PostListViewModel
 import com.example.sharewhatyoucanproject.rposts.PostListViewModelFactory
@@ -46,7 +46,7 @@ class PostListFragment : Fragment() {
 
         binding.progressCircular.visibility = View.VISIBLE
         foodList = binding.foodlist
-        postAdapter = PostAdapter(requireContext()) { postModel ->
+        postAdapter = PostAdapter() { postModel ->
             val action =
                 PostListFragmentDirections.actionDashboardFragmentToRDetailsFragment(
                     Json.encodeToString(
@@ -64,6 +64,7 @@ class PostListFragment : Fragment() {
                 is TaskResult.Success -> {
                     binding.progressCircular.visibility = View.GONE
                     postAdapter.setPostsList(taskResult.arrayList)
+                    postAdapter.notifyDataSetChanged()
                 }
                 is TaskResult.Error -> {
                     circularProgressIndicator.visibility = View.GONE

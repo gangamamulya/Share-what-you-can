@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sharewhatyoucanproject.models.GeoPoint
 import com.example.sharewhatyoucanproject.models.PostModel
 import com.example.sharewhatyoucanproject.models.RequestModel
+import com.example.sharewhatyoucanproject.utils.randomRoom
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 class DeliverViewModel(
-    private val db: FirebaseFirestore,
+    private val db: FirebaseFirestore?,
 ) : ViewModel() {
 
     private val _deliverResult = MutableLiveData<DeliverResult>()
@@ -23,11 +24,11 @@ class DeliverViewModel(
 
 
     fun getItems() {
-        db.collection("posts")
-            .whereEqualTo("uid", FirebaseAuth.getInstance().currentUser!!.uid)
-            .whereNotEqualTo("status", 2)
-            .get()
-            .addOnCompleteListener { task ->
+        db?.collection("posts")
+            ?.whereEqualTo("uid", FirebaseAuth.getInstance().currentUser!!.uid)
+            ?.whereNotEqualTo("status", 2)
+            ?.get()
+            ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val list = mutableListOf<PostModel>()
                     for (ds in task.result) {
@@ -56,53 +57,55 @@ class DeliverViewModel(
     }
 
     fun donate(postModel: PostModel, requestModel: RequestModel) {
-        val donationmap: MutableMap<String, Any?> = HashMap()
+        val donationMap: MutableMap<String, Any?> = getDonationMap(
+            postModel, requestModel,
+            FirebaseAuth.getInstance().currentUser!!.displayName,
+            FirebaseAuth.getInstance().currentUser!!.uid,
+        )
+        db?.let {
+            val sref = db.collection("donations").document(randomRoom())
+            val uref =
+                db.collection("posts").document(postModel.postid)
 
-        donationmap["donor"] = FirebaseAuth.getInstance().currentUser!!.displayName
-        donationmap["donatedTo"] = requestModel.uid + ""
-        donationmap["receiverName"] = requestModel.name + ""
-        donationmap["time"] = FieldValue.serverTimestamp()
-        donationmap["title"] = postModel.title
-        donationmap["img"] = postModel.image
-        donationmap["desc"] = postModel.desc
-        donationmap["uid"] = FirebaseAuth.getInstance().currentUser!!.uid
-
-        val sref = db.collection("donations").document(randomRoom())
-        val uref =
-            db.collection("posts").document(postModel.postid)
-
-        val uref2 = db.collection("requests").document(requestModel.updateid)
-        db.runBatch { batch ->
-            batch.set(sref, donationmap)
-            batch.update(uref, "status", FoodDonationCompleted)
-            batch.update(uref2, "status", FoodDonationCompleted)
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                _donationResult.value = DonationResult.Success
-            } else {
-                _donationResult.value = DonationResult.Error
+            val uref2 = db.collection("requests").document(requestModel.updateid)
+            db.runBatch { batch ->
+                batch.set(sref, donationMap)
+                batch.update(uref, "status", FoodDonationCompleted)
+                batch.update(uref2, "status", FoodDonationCompleted)
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _donationResult.value = DonationResult.Success
+                } else {
+                    _donationResult.value = DonationResult.Error
+                }
             }
         }
     }
 
+    fun getDonationMap(
+        postModel: PostModel,
+        requestModel: RequestModel,
+        displayName: String?,
+        uid: String?,
+    ): MutableMap<String, Any?> {
+        val donationMap: MutableMap<String, Any?> = HashMap()
+
+        donationMap["donor"] = displayName
+        donationMap["donatedTo"] = requestModel.uid + ""
+        donationMap["receiverName"] = requestModel.name + ""
+        donationMap["time"] = FieldValue.serverTimestamp()
+        donationMap["title"] = postModel.title
+        donationMap["img"] = postModel.image
+        donationMap["desc"] = postModel.desc
+        donationMap["uid"] = uid
+        return donationMap
+    }
+
     companion object {
-        val FoodDonationCompleted = 2
+        const val FoodDonationCompleted = 2
     }
 }
 
-private fun randomRoom(): String {
-    val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-    val sb = StringBuilder()
-    val random = Random()
-    val length = 20
-    for (i in 0 until length) {
-        val index = random.nextInt(alphabet.length)
-        val randomChar = alphabet[index]
-
-        sb.append(randomChar)
-    }
-    return sb.toString()
-}
 
 class DeliverViewModelFactory(
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),

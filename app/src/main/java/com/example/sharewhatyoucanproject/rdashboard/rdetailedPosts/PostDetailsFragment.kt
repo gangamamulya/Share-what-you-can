@@ -57,35 +57,35 @@ class PostDetailsFragment : Fragment() {
         postDetailsViewModel.postDetailsViewModel = post
         binding.requestbtn.setOnClickListener {
             postDetailsViewModel.sendFoodRequest()
+        }
 
-            postDetailsViewModel.detailsResult.observe(viewLifecycleOwner) { detailsResult ->
-                when (detailsResult) {
-                    is DetailsResult.GetFoodRequestSuccessAlreadySent -> {
-                        Log.d("result of detailsResult", detailsResult.toString())
-                        binding.requestbtn.isEnabled = false
-                        binding.requestbtn.setBackgroundResource(R.drawable.graycurve)
-                        binding.requestbtn.text = "Already Sent"
+        postDetailsViewModel.detailsResult.observe(viewLifecycleOwner) { detailsResult ->
+            when (detailsResult) {
+                is DetailsResult.GetFoodRequestSuccessAlreadySent -> {
+                    Log.d("result of detailsResult", detailsResult.toString())
+                    binding.requestbtn.isEnabled = false
+                    binding.requestbtn.setBackgroundResource(R.drawable.graycurve)
+                    binding.requestbtn.text = "Already Sent"
 
-                        binding.progressCircular.visibility = View.GONE
-                    }
-                    is DetailsResult.SendFoodRequestSuccess -> {
-                        Log.d("SendFoodRequestSuccess", detailsResult.toString())
-                        binding.requestbtn.isEnabled = false
-                        binding.requestbtn.text = "Request Sent"
-                        binding.requestbtn.setBackgroundResource(R.drawable.graycurve)
-                        requireContext().showToast("Request Sent")
-                        // findNavController().navigateUp()
-                    }
-                    is DetailsResult.Error -> {
-                        requireContext().showToast("Request Failed")
-                    }
+                    binding.progressCircular.visibility = View.GONE
+                }
+                is DetailsResult.SendFoodRequestSuccess -> {
+                    Log.d("SendFoodRequestSuccess", detailsResult.toString())
+                    binding.requestbtn.isEnabled = false
+                    binding.requestbtn.text = "Request Sent"
+                    binding.requestbtn.setBackgroundResource(R.drawable.graycurve)
+                    requireContext().showToast("Request Sent")
+                    // findNavController().navigateUp()
+                }
+                is DetailsResult.Error -> {
+                    requireContext().showToast("Request Failed")
+                }
 
-                    is DetailsResult.GetFoodRequestSuccessAccepted -> {
-                        Log.d("result of detailsResult", detailsResult.toString())
-                        requestbtn.setBackgroundResource(R.drawable.greencurve)
-                        requestbtn.text = "Accepted"
-                        requestbtn.isEnabled = false
-                    }
+                is DetailsResult.GetFoodRequestSuccessAccepted -> {
+                    Log.d("result of detailsResult", detailsResult.toString())
+                    requestbtn.setBackgroundResource(R.drawable.greencurve)
+                    requestbtn.text = "Accepted"
+                    requestbtn.isEnabled = false
                 }
             }
         }

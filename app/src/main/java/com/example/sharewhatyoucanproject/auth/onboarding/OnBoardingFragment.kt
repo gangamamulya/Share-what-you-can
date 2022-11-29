@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.sharewhatyoucanproject.MainActivity
 import com.example.sharewhatyoucanproject.databinding.FragmentOnBoardingBinding
 import com.example.sharewhatyoucanproject.models.UserType
 
@@ -23,6 +24,7 @@ class OnBoardingFragment : Fragment() {
         onBoardingViewModel = ViewModelProvider(this)[OnBoardingViewModel::class.java]
         onBoardingViewModel.logout()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,7 +32,8 @@ class OnBoardingFragment : Fragment() {
     ): View? {
         _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
 
-        (activity as AppCompatActivity?)?.supportActionBar?.hide()
+        if (activity is MainActivity)
+            (activity as AppCompatActivity?)?.supportActionBar?.hide()
 
         binding.donerimg.setOnClickListener {
             val action =
